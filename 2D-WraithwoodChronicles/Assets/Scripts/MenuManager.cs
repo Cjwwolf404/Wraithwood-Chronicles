@@ -5,6 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    void Update()
+    {
+    if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            SceneManager.LoadScene("PauseMenu");
+        }
+    }
+
     public void PlayGame()
     {
         SceneManager.LoadScene("MainLevel");
