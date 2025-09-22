@@ -1,51 +1,88 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 
-public class PlayerController : PhysicsObject
+public class PlayerController : MonoBehaviour
 {
+    private Rigidbody2D rb;
+
+    public Transform groundCheckPos;
+    public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f);
+    public LayerMask groundLayer;
+
+    float horizontalInput;
+
     public float maxSpeed;
     public float jumpTakeOffSpeed;
+
+    public float gravityModifier = 1f;
+
+    private bool isFacingRight = true;
 
     public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    protected override void ComputeVelocity()
+    void Update()
     {
-        UnityEngine.Vector2 move = UnityEngine.Vector2.zero;
+        horizontalInput = Input.GetAxis("Horizontal");
 
-        move.x = Input.GetAxis("Horizontal");
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if(GroundCheck())
         {
-            velocity.y = jumpTakeOffSpeed;
-            isGrounded = false;
-            animator.SetBool("isJumping", !isGrounded);
-        }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            if (velocity.y > 0)
+            if (Input.GetButtonDown("Jump"))
             {
-                velocity.y = velocity.y * 0.5f;
+                rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
+                animator.SetBool("isJumping", true);
+            }
+            else if (Input.GetButtonUp("Jump"))
+            {
+                if (rb.velocity.y > 0)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+                }
             }
         }
 
-        targetVelocity = move * maxSpeed;
-        animator.SetFloat("xVelocity", Math.Abs(targetVelocity.x));
-        animator.SetFloat("yVelocity", targetVelocity.y);
+        FlipSprite();
     }
 
-    // private void OnCollisionEnter2D(Collider2D collision)
-    // {
-    //     isGrounded = true;
-    //     animator.SetBool("isJumping", !isGrounded);
-    // }
+    private void FixedUpdate()
+    {
+        rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
+        animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
+        animator.SetFloat("yVelocity", rb.velocity.y);
+    }
 
+    private bool GroundCheck()
+    {
+        if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+        {
+            animator.SetBool("isJumping", false);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
+    }
+
+    void FlipSprite()
+    {
+        if (isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 ls = transform.localScale;
+            ls.x *= -1f;
+            transform.localScale = ls;
+        }
+    }
 }
