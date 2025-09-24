@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
-                animator.SetBool("isJumping", true);
                 jumpsRemaining--;
             }
             else if (Input.GetButtonUp("Jump"))
@@ -59,6 +58,11 @@ public class PlayerController : MonoBehaviour
                     jumpsRemaining--;
                 }
             }
+        }
+
+        if (rb.velocity.y > 0)
+        {
+            animator.SetBool("isJumping", true);
         }
     }
 

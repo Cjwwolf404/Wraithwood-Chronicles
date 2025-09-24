@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 98135901}
   - component: {fileID: 98135903}
   - component: {fileID: 98135902}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -863,7 +863,7 @@ GameObject:
   - component: {fileID: 398115655}
   - component: {fileID: 398115657}
   - component: {fileID: 398115656}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1593,7 +1593,7 @@ Transform:
   m_GameObject: {fileID: 710888482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.08, y: -2.02, z: 0}
+  m_LocalPosition: {x: -0.03, y: -2.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2201,14 +2201,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca9ea27ef44dcec43891fc568ab5e905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeed: 10
+  jumpTakeOffSpeed: 20
+  maxJumps: 1
   groundCheckPos: {fileID: 710888483}
-  groundCheckSize: {x: 0.98, y: 0.17}
+  groundCheckSize: {x: 0.98, y: 0.23}
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
-  maxSpeed: 10
-  jumpTakeOffSpeed: 17
-  gravityModifier: 3.4
+  baseGravity: 3
+  maxFallSpeed: 18
+  fallSpeedMultiplier: 1.5
   animator: {fileID: 824704037}
 --- !u!61 &824704036
 BoxCollider2D:
@@ -2287,7 +2290,7 @@ GameObject:
   - component: {fileID: 1031474897}
   - component: {fileID: 1031474896}
   - component: {fileID: 1031474898}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3239,7 +3242,7 @@ GameObject:
   - component: {fileID: 1754945797}
   - component: {fileID: 1754945799}
   - component: {fileID: 1754945798}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3369,7 +3372,7 @@ GameObject:
   - component: {fileID: 1829132123}
   - component: {fileID: 1829132125}
   - component: {fileID: 1829132124}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3499,7 +3502,7 @@ GameObject:
   - component: {fileID: 1856009929}
   - component: {fileID: 1856009931}
   - component: {fileID: 1856009930}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3759,7 +3762,7 @@ GameObject:
   - component: {fileID: 2001790027}
   - component: {fileID: 2001790029}
   - component: {fileID: 2001790028}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4017,7 +4020,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2057232570}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4318,7 +4321,7 @@ GameObject:
   - component: {fileID: 2140355759}
   - component: {fileID: 2140355761}
   - component: {fileID: 2140355760}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Platform (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
