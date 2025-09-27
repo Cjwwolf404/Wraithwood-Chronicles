@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private bool isFacingRight = true;
 
+    private bool canMove = true;
+
     public Animator animator;
 
     // Start is called before the first frame update
@@ -43,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
 
-        if (jumpsRemaining > 0)
+        if (jumpsRemaining > 0 && canMove)
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -81,9 +83,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
-        animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
-        animator.SetFloat("yVelocity", rb.velocity.y);
+        if (canMove)
+        {
+            rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
+            animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
+            animator.SetFloat("yVelocity", rb.velocity.y);
+        }
     }
 
     private void GroundCheck()
@@ -103,12 +108,25 @@ public class PlayerController : MonoBehaviour
 
     void FlipSprite()
     {
-        if (isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
+        if (canMove)
         {
-            isFacingRight = !isFacingRight;
-            Vector3 ls = transform.localScale;
-            ls.x *= -1f;
-            transform.localScale = ls;
+            if (isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
+                {
+                    isFacingRight = !isFacingRight;
+                    Vector3 ls = transform.localScale;
+                    ls.x *= -1f;
+                    transform.localScale = ls;
+                }
         }
+    }
+
+    public void DisableMovement()
+    {
+        canMove = false;
+    }
+
+    public void EnableMovement()
+    {
+        canMove = true;
     }
 }
