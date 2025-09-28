@@ -546,7 +546,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1156529935
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &201328841
@@ -1549,7 +1549,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000e547813c
+  m_ApplyToSortingLayers: 00000000e547813cf1c010bb
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1693,7 +1693,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1156529935
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &653043522
@@ -2398,7 +2398,7 @@ Transform:
   m_GameObject: {fileID: 789484496}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 165.34734, y: -30, z: 0}
+  m_LocalPosition: {x: 167.34734, y: -30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2418,8 +2418,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueLines:
-  - Line 1
-  - Line 2
+  - What did you do just now, how did you save me?
+  - It seems you possess a peculiar power. Well no matter, I suppose thanks are in
+    order. Thank you little fellow, my name is Scylus. I am the leader of Mantis
+    Village, which is what you see behind me.
+  - A creature of few words, I see. Well, follow me into the village, and we shall
+    see if we can uncover some truths about what just took place.
   npcName: Scylus
   dialoguePromptUI: {fileID: 629432844}
   dialogueUI: {fileID: 890094005}
@@ -2639,8 +2643,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1015105509
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 6f264086c803f1847be159fe1b461e26, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3340,7 +3344,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1156529935
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &1418448465
