@@ -66,6 +66,11 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("isJumping", true);
         }
+
+        if (rb.velocity.y < 0)
+        {
+            animator.SetBool("isFalling", true);
+        }
     }
 
     private void Gravity()
@@ -96,6 +101,7 @@ public class PlayerController : MonoBehaviour
         if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
         {
             animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", false);
             jumpsRemaining = maxJumps;
         }
     }
@@ -123,10 +129,13 @@ public class PlayerController : MonoBehaviour
     public void DisableMovement()
     {
         canMove = false;
+        rb.velocity = new Vector2 (0f, rb.velocity.y);
+        animator.SetBool("canMove", false);
     }
 
     public void EnableMovement()
     {
         canMove = true;
+        animator.SetBool("canMove", true);
     }
 }
