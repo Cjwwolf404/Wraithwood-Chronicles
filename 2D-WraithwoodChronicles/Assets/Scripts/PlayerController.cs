@@ -6,12 +6,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
+
+    [Header("Movement")]
     public float maxSpeed;
     float horizontalInput;
     public float jumpTakeOffSpeed;
 
     public int maxJumps;
     private int jumpsRemaining;
+
+    [Header("Health and Damage")]
+    public float playerHealth;
+    public float playerDamage;
 
     [Header("GroundCheck")]
     public Transform groundCheckPos;
@@ -45,22 +51,27 @@ public class PlayerController : MonoBehaviour
 
         GroundCheck();
 
-        if (jumpsRemaining > 0 && canMove)
+        if (Input.GetMouseButtonDown(0) && canMove)
         {
-            if (Input.GetButtonDown("Jump"))
+            Attack();
+        }
+
+        if (jumpsRemaining > 0 && canMove)
             {
-                rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
-                jumpsRemaining--;
-            }
-            else if (Input.GetButtonUp("Jump"))
-            {
-                if (rb.velocity.y > 0)
+                if (Input.GetButtonDown("Jump"))
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+                    rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
                     jumpsRemaining--;
                 }
+                else if (Input.GetButtonUp("Jump"))
+                {
+                    if (rb.velocity.y > 0)
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+                        jumpsRemaining--;
+                    }
+                }
             }
-        }
 
         if (rb.velocity.y > 0)
         {
@@ -70,6 +81,16 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y < 0)
         {
             animator.SetBool("isFalling", true);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (canMove)
+        {
+            rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
+            animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
+            animator.SetFloat("yVelocity", rb.velocity.y);
         }
     }
 
@@ -86,14 +107,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    public void Attack()
     {
-        if (canMove)
-        {
-            rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
-            animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
-            animator.SetFloat("yVelocity", rb.velocity.y);
-        }
+        Debug.Log("Attack");
     }
 
     private void GroundCheck()
@@ -104,6 +120,19 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isFalling", false);
             jumpsRemaining = maxJumps;
         }
+    }
+    
+    public void DisableMovement()
+    {
+        canMove = false;
+        rb.velocity = new Vector2(0f, rb.velocity.y);
+        animator.SetBool("canMove", false);
+    }
+
+    public void EnableMovement()
+    {
+        canMove = true;
+        animator.SetBool("canMove", true);
     }
 
     private void OnDrawGizmosSelected()
@@ -124,18 +153,5 @@ public class PlayerController : MonoBehaviour
                     transform.localScale = ls;
                 }
         }
-    }
-
-    public void DisableMovement()
-    {
-        canMove = false;
-        rb.velocity = new Vector2 (0f, rb.velocity.y);
-        animator.SetBool("canMove", false);
-    }
-
-    public void EnableMovement()
-    {
-        canMove = true;
-        animator.SetBool("canMove", true);
     }
 }

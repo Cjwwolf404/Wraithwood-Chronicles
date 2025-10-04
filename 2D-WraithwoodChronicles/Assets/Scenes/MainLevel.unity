@@ -3953,6 +3953,8 @@ MonoBehaviour:
   maxSpeed: 10
   jumpTakeOffSpeed: 20
   maxJumps: 1
+  playerHealth: 10
+  playerDamage: 1
   groundCheckPos: {fileID: 710888483}
   groundCheckSize: {x: 0.98, y: 0.23}
   groundLayer:
