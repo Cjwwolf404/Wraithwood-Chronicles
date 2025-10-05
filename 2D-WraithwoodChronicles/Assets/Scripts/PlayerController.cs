@@ -17,7 +17,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("Health and Damage")]
     public float playerHealth;
+    private float currentHealth;
     public float playerDamage;
+
+    [Header("Attack Circle")]
+    public GameObject attackPoint;
+    public float attackRadius;
+    public LayerMask enemies;
 
     [Header("GroundCheck")]
     public Transform groundCheckPos;
@@ -53,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canMove)
         {
+            //Set animator
             Attack();
         }
 
@@ -109,7 +116,18 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
-        Debug.Log("Attack");
+        Collider2D[] enemy = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius, enemies);
+
+        foreach (Collider2D enemyGameObject in enemy)
+        {
+            Debug.Log("Attack");
+            enemyGameObject.GetComponent<Enemy>().enemyHealth -= playerDamage;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        playerHealth -= damage;
     }
 
     private void GroundCheck()
@@ -135,10 +153,11 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("canMove", true);
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
+        Gizmos.DrawWireSphere(attackPoint.transform.position, attackRadius);
     }
 
     void FlipSprite()
