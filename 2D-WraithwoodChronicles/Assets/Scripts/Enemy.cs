@@ -17,9 +17,10 @@ public class Enemy : MonoBehaviour
     [Header("Attacking")]
     public float chaseSpeed;
     public float detectionRange;
+    public float verticalTolerance;
 
     private Transform player;
-    private Vector2 currentTarget;
+    private Vector3 currentTarget;
     private bool isChasing = false;
 
     private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
@@ -40,8 +41,9 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        float verticalDistance = Mathf.Abs(transform.position.y - player.position.y);
 
-        if (distanceToPlayer <= detectionRange)
+        if (distanceToPlayer <= detectionRange && verticalDistance <= verticalTolerance)
         {
             isChasing = true;
         }
@@ -72,11 +74,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void AttackPlayer()
-    {
-        transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
-    }
-
     public void Patrol()
     {
         transform.position = Vector2.MoveTowards(transform.position, currentTarget, patrolSpeed * Time.deltaTime);
@@ -87,11 +84,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    public void AttackPlayer()
     {
-        if (collision.CompareTag("Player"))
+        transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            GetComponent<PlayerController>().TakeDamage(enemyDamage);
+            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage);
         }
     }
 
