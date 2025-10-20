@@ -80,7 +80,7 @@ public class Scylus : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (isInfected && collision.CompareTag("Player"))
         {
             playerInRange = false;
             UIManager.Instance.ChangeGamePromptPanelActive(true);

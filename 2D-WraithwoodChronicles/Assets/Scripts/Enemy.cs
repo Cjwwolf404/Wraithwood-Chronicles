@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -18,6 +19,7 @@ public class Enemy : MonoBehaviour
     public float chaseSpeed;
     public float detectionRange;
     public float verticalTolerance;
+    public float knockbackForce;
 
     private Transform player;
     private Vector3 currentTarget;
@@ -25,11 +27,17 @@ public class Enemy : MonoBehaviour
 
     private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
 
+    private Rigidbody2D rb;
+
+    private bool canMove = true;
+
     private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+
         currentTarget = pointB.position;
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
@@ -43,22 +51,25 @@ public class Enemy : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         float verticalDistance = Mathf.Abs(transform.position.y - player.position.y);
 
-        if (distanceToPlayer <= detectionRange && verticalDistance <= verticalTolerance)
+        if(canMove)
         {
-            isChasing = true;
-        }
-        else
-        {
-            isChasing = false;
-        }
+            if (distanceToPlayer <= detectionRange && verticalDistance <= verticalTolerance)
+            {
+                isChasing = true;
+            }
+            else
+            {
+                isChasing = false;
+            }
 
-        if (isChasing)
-        {
-            AttackPlayer();
-        }
-        else
-        {
-            Patrol();
+            if (isChasing)
+            {
+                AttackPlayer();
+            }
+            else
+            {
+                Patrol();
+            }
         }
 
         if (enemyHealth < currentHealth)
@@ -93,8 +104,33 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage);
+            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage, transform.position, knockbackForce);
+            StartCoroutine(AttackCooldown());
         }
+    }
+
+    IEnumerator AttackCooldown()
+    {
+        DisableMovement();
+
+        yield return new WaitForSeconds(1);
+        
+        EnableMovement();
+
+        yield return null;
+    }
+
+    public void DisableMovement()
+    {
+        canMove = false;
+        rb.velocity = new Vector2(0f, rb.velocity.y);
+        //animator.SetBool("canMove", false);
+    }
+
+    public void EnableMovement()
+    {
+        canMove = true;
+        //animator.SetBool("canMove", true);
     }
 
     void OnDrawGizmos()

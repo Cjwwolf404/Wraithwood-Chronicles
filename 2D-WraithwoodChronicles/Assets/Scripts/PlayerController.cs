@@ -125,8 +125,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
     {
+        Vector2 knockbackDirection = new Vector2(rb.position.x - sourcePosition.x, 0).normalized;
+
+        rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+
         playerHealth -= damage;
     }
 
