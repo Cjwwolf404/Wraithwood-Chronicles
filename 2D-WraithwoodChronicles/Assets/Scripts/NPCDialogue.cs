@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Scylus))]
 public class NPCDialogue : MonoBehaviour
 {
     [TextArea(3, 10)]
@@ -62,7 +63,7 @@ public class NPCDialogue : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!GetComponent<Scylus>().isInfected && collision.CompareTag("Player"))
         {
             playerInRange = true;
             dialoguePromptUI.SetActive(true);
