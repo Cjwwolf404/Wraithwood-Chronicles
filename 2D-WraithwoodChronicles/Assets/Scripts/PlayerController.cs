@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float playerHealth;
     private float currentHealth;
     public float playerDamage;
+    public float knockbackForce;
 
     [Header("Attack Circle")]
     public GameObject attackPoint;
@@ -38,6 +39,8 @@ public class PlayerController : MonoBehaviour
     private bool isFacingRight = true;
 
     private bool canMove = true;
+
+    private bool isKnockedBack = false;
 
     public Animator animator;
 
@@ -93,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (canMove)
+        if (canMove && !isKnockedBack)
         {
             rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
             animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
@@ -120,18 +123,30 @@ public class PlayerController : MonoBehaviour
 
         foreach (Collider2D enemyGameObject in enemy)
         {
-            Debug.Log("Attack");
-            enemyGameObject.GetComponent<Enemy>().enemyHealth -= playerDamage;
+            enemyGameObject.GetComponent<Enemy>().TakeDamage(playerDamage, transform.position, knockbackForce);
         }
     }
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
     {
-        Vector2 knockbackDirection = new Vector2(rb.position.x - sourcePosition.x, 0).normalized;
-
-        rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
-
         playerHealth -= damage;
+
+        if (isKnockedBack) return;
+
+        isKnockedBack = true;
+
+        float knockbackDirection = transform.position.x < sourcePosition.x ? -1 : 1;
+
+        rb.velocity = Vector2.zero;
+
+        rb.AddForce(new Vector2(knockbackDirection * knockbackForce, 3f), ForceMode2D.Impulse);
+
+        Invoke(nameof(EndKnockback), 0.2f);
+    }
+    
+    private void EndKnockback()
+    {
+        isKnockedBack = false;
     }
 
     private void GroundCheck()

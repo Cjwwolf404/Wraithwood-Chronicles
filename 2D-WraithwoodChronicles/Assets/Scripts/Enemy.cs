@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     public float knockbackForce;
 
     private Transform player;
-    private Vector3 currentTarget;
+    private Transform currentTarget;
     private bool isChasing = false;
 
     private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
@@ -31,6 +31,8 @@ public class Enemy : MonoBehaviour
 
     private bool canMove = true;
 
+    private bool isKnockedBack = false;
+
     private Animator animator;
 
     // Start is called before the first frame update
@@ -38,7 +40,7 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        currentTarget = pointB.position;
+        currentTarget = pointB;
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         animator = GetComponent<Animator>();
@@ -46,12 +48,12 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         float verticalDistance = Mathf.Abs(transform.position.y - player.position.y);
 
-        if(canMove)
+        if(canMove && !isKnockedBack)
         {
             if (distanceToPlayer <= detectionRange && verticalDistance <= verticalTolerance)
             {
@@ -87,17 +89,25 @@ public class Enemy : MonoBehaviour
 
     public void Patrol()
     {
-        transform.position = Vector2.MoveTowards(transform.position, currentTarget, patrolSpeed * Time.deltaTime);
+        Vector2 currentPosition = rb.position;
+        Vector2 targetPosition = new Vector2(currentTarget.position.x, currentPosition.y);
 
-        if (Vector2.Distance(transform.position, currentTarget) < 0.1f)
+        Vector2 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, patrolSpeed * Time.deltaTime);
+        rb.MovePosition(newPosition);
+
+        if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
         {
-            currentTarget = currentTarget == pointA.position ? pointB.position : pointA.position;
+            currentTarget = (currentTarget == pointA) ? pointB : pointA;
         }
     }
 
     public void AttackPlayer()
     {
-        transform.position = Vector2.MoveTowards(transform.position, player.position, chaseSpeed * Time.deltaTime);
+        Vector2 currentPosition = rb.position;
+        Vector2 targetPosition = new Vector2(player.position.x, currentPosition.y);
+
+        Vector2 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, chaseSpeed * Time.deltaTime);
+        rb.MovePosition(newPosition);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -113,11 +123,33 @@ public class Enemy : MonoBehaviour
     {
         DisableMovement();
 
-        yield return new WaitForSeconds(1);
-        
+        yield return new WaitForSeconds(0.5f);
+
         EnableMovement();
 
         yield return null;
+    }
+
+    public void TakeDamage(float playerDamage, Vector2 sourcePosition, float knockbackForce)
+    {
+        enemyHealth -= playerDamage;
+
+        if (isKnockedBack) return;
+
+        isKnockedBack = true;
+
+        float knockbackDirection = transform.position.x < sourcePosition.x ? -1 : 1;
+
+        rb.velocity = Vector2.zero;
+
+        rb.AddForce(new Vector2(knockbackDirection * knockbackForce, 3f), ForceMode2D.Impulse);
+
+        Invoke(nameof(EndKnockback), 0.2f);
+    }
+    
+    private void EndKnockback()
+    {
+        isKnockedBack = false;
     }
 
     public void DisableMovement()
