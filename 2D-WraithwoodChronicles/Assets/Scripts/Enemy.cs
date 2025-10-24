@@ -14,24 +14,29 @@ public class Enemy : MonoBehaviour
     public Transform pointA;
     public Transform pointB;
     public float patrolSpeed;
+    private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
+    private Transform currentTarget;
 
     [Header("Attacking")]
     public float chaseSpeed;
     public float detectionRange;
-    public float verticalTolerance;
     public float knockbackForce;
-
     private Transform player;
-    private Transform currentTarget;
-    private bool isChasing = false;
 
-    private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
+    [Header("Edge Detection")]
+    public Transform groundCheck;
+    public float groundCheckDistance;
+    public float flipCooldown;
+    private float lastFlipTime;
+    public Vector2 groundCheckSize;
+    public LayerMask groundLayer;
 
     private Rigidbody2D rb;
 
+    private bool isChasing = false;
     private bool canMove = true;
-
     private bool isKnockedBack = false;
+    private bool isFacingRight = true;
 
     private Animator animator;
 
@@ -51,11 +56,10 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-        float verticalDistance = Mathf.Abs(transform.position.y - player.position.y);
 
-        if(canMove && !isKnockedBack)
+        if (canMove && !isKnockedBack)
         {
-            if (distanceToPlayer <= detectionRange && verticalDistance <= verticalTolerance)
+            if (distanceToPlayer <= detectionRange)
             {
                 isChasing = true;
             }
@@ -64,14 +68,19 @@ public class Enemy : MonoBehaviour
                 isChasing = false;
             }
 
-            if (isChasing)
+            if (!IsGroundAhead())
             {
-                AttackPlayer();
+                if (isChasing)
+                {
+                    StopAtEdge();
+                    return;
+                }
+
+                if (Time.time - lastFlipTime > flipCooldown)
+                    FlipEnemy();
             }
-            else
-            {
-                Patrol();
-            }
+
+            MoveEnemy();
         }
 
         if (enemyHealth < currentHealth)
@@ -87,30 +96,59 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Patrol()
+    private void MoveEnemy()
     {
-        Vector2 currentPosition = rb.position;
-        Vector2 targetPosition = new Vector2(currentTarget.position.x, currentPosition.y);
+        float verticalVelocity = rb.velocity.y;
+        float speed = isChasing ? chaseSpeed : patrolSpeed;
 
-        Vector2 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, patrolSpeed * Time.deltaTime);
-        rb.MovePosition(newPosition);
+        float direction = 0f;
 
-        if (Vector2.Distance(currentPosition, targetPosition) < 0.1f)
+        if (isChasing) //Attacking player state
         {
-            currentTarget = (currentTarget == pointA) ? pointB : pointA;
+            float relativePosition = player.position.x - transform.position.x;
+            direction = Mathf.Sign(relativePosition);
+
+            if ((relativePosition > 0 && !isFacingRight) || (relativePosition < 0 && isFacingRight))
+            {
+                FlipEnemy();
+            }
         }
-    }
+        else //Patrolling state
+        {
+            direction = Mathf.Sign(currentTarget.position.x - transform.position.x);
+            if (Mathf.Abs(transform.position.x - currentTarget.position.x) <= 0.1f)
+            {
+                FlipEnemy();
+            }
+        }
 
-    public void AttackPlayer()
+        rb.velocity = new Vector2(direction * speed, verticalVelocity);
+    }
+    
+    private bool IsGroundAhead()
     {
-        Vector2 currentPosition = rb.position;
-        Vector2 targetPosition = new Vector2(player.position.x, currentPosition.y);
-
-        Vector2 newPosition = Vector2.MoveTowards(currentPosition, targetPosition, chaseSpeed * Time.deltaTime);
-        rb.MovePosition(newPosition);
+        Vector2 origin = groundCheck.position + Vector3.right * (isFacingRight ? groundCheckDistance : groundCheckDistance);
+        bool hit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundLayer);
+        Debug.DrawRay(origin, Vector2.down * groundCheckDistance, hit ? Color.green : Color.red);
+        return hit;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public void FlipEnemy()
+    {
+        currentTarget = (currentTarget == pointA) ? pointB : pointA;
+        isFacingRight = !isFacingRight;
+        Vector3 ls = transform.localScale;
+        ls.y *= -1;
+        transform.localScale = ls;
+        lastFlipTime = Time.time;
+    }
+    
+    public void StopAtEdge()
+    {
+        rb.velocity = new Vector2(0, rb.velocity.y);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision) //Attack
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -170,5 +208,7 @@ public class Enemy : MonoBehaviour
         Gizmos.color = Color.white;
         Gizmos.DrawWireCube(pointA.position, patrolPointSize);
         Gizmos.DrawWireCube(pointB.position, patrolPointSize);
+
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
     }
 }

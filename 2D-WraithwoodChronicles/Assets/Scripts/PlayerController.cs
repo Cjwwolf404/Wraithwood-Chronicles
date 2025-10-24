@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed;
     float horizontalInput;
     public float jumpTakeOffSpeed;
-
     public int maxJumps;
     private int jumpsRemaining;
 
@@ -37,9 +36,7 @@ public class PlayerController : MonoBehaviour
     public float fallSpeedMultiplier;
 
     private bool isFacingRight = true;
-
     private bool canMove = true;
-
     private bool isKnockedBack = false;
 
     public Animator animator;
@@ -54,11 +51,11 @@ public class PlayerController : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
 
-        FlipSprite();
-
         Gravity();
 
         GroundCheck();
+        
+        FlipSprite();
 
         if (Input.GetMouseButtonDown(0) && canMove)
         {
@@ -92,6 +89,11 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("isFalling", true);
         }
+
+        if(playerHealth <= 0)
+        {
+            Debug.Log("Player died");
+        }
     }
 
     private void FixedUpdate()
@@ -114,6 +116,16 @@ public class PlayerController : MonoBehaviour
         else
         {
             rb.gravityScale = baseGravity;
+        }
+    }
+
+    private void GroundCheck()
+    {
+        if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+        {
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isFalling", false);
+            jumpsRemaining = maxJumps;
         }
     }
 
@@ -148,16 +160,6 @@ public class PlayerController : MonoBehaviour
     {
         isKnockedBack = false;
     }
-
-    private void GroundCheck()
-    {
-        if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
-        {
-            animator.SetBool("isJumping", false);
-            animator.SetBool("isFalling", false);
-            jumpsRemaining = maxJumps;
-        }
-    }
     
     public void DisableMovement()
     {
@@ -172,24 +174,24 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("canMove", true);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
-        Gizmos.DrawWireSphere(attackPoint.transform.position, attackRadius);
-    }
-
     void FlipSprite()
     {
         if (canMove)
         {
             if (isFacingRight && horizontalInput < 0f || !isFacingRight && horizontalInput > 0f)
-                {
-                    isFacingRight = !isFacingRight;
-                    Vector3 ls = transform.localScale;
-                    ls.x *= -1f;
-                    transform.localScale = ls;
-                }
+            {
+                isFacingRight = !isFacingRight;
+                Vector3 ls = transform.localScale;
+                ls.x *= -1f;
+                transform.localScale = ls;
+            }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube(groundCheckPos.position, groundCheckSize);
+        Gizmos.DrawWireSphere(attackPoint.transform.position, attackRadius);
     }
 }
