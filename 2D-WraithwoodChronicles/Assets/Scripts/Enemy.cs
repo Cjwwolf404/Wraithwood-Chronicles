@@ -77,7 +77,9 @@ public class Enemy : MonoBehaviour
                 }
 
                 if (Time.time - lastFlipTime > flipCooldown)
+                {
                     FlipEnemy();
+                }
             }
 
             MoveEnemy();

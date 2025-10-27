@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     public GameObject attackPoint;
     public float attackRadius;
     public LayerMask enemies;
+    private float attackWait = 1f;
+    private float lastAttackTime;
+    private bool isAttacking = false;
 
     [Header("GroundCheck")]
     public Transform groundCheckPos;
@@ -57,10 +60,13 @@ public class PlayerController : MonoBehaviour
         
         FlipSprite();
 
-        if (Input.GetMouseButtonDown(0) && canMove)
+        if (Input.GetMouseButtonDown(0) && canMove && !isAttacking)
         {
-            //Set animator
+            isAttacking = true;
+            lastAttackTime = Time.time;
+            animator.SetBool("isAttacking", true);
             Attack();
+            StartCoroutine(AttackWait());
         }
 
         if (jumpsRemaining > 0 && canMove)
@@ -104,6 +110,18 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
             animator.SetFloat("yVelocity", rb.velocity.y);
         }
+
+        if(isAttacking)
+        {
+            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+            {
+                StopCoroutine(AttackWait());
+                animator.SetBool("secondSwing", false);
+                animator.SetBool("isAttacking", false);
+                isAttacking = false;
+                Debug.Log("Attack cancelled");
+            }
+        }
     }
 
     private void Gravity()
@@ -137,6 +155,46 @@ public class PlayerController : MonoBehaviour
         {
             enemyGameObject.GetComponent<Enemy>().TakeDamage(playerDamage, transform.position, knockbackForce);
         }
+
+        Debug.Log("Attack");
+    }
+
+    public IEnumerator AttackWait()
+    {
+        Debug.Log("Coroutine starting");
+        bool secondSwing = false;
+        yield return new WaitForSeconds(0.05f);
+
+        while (Time.time - lastAttackTime < attackWait)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!secondSwing)
+                {
+                    lastAttackTime = Time.time;
+                    animator.SetBool("secondSwing", true);
+                    Attack();
+                    secondSwing = true;
+                    Debug.Log("Second swing");
+                }
+                else
+                {
+                    lastAttackTime = Time.time;
+                    animator.SetBool("secondSwing", false);
+                    Attack();
+                    secondSwing = false;
+                    Debug.Log("First swing");
+                }
+            }
+
+            yield return null;
+        }
+
+        animator.SetBool("secondSwing", false);
+        animator.SetBool("isAttacking", false);
+        yield return new WaitForSeconds(0.1f);
+        isAttacking = false;
+        Debug.Log("Coroutine finished");
     }
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
