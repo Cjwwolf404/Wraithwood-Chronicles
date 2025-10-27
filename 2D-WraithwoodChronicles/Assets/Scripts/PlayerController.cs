@@ -64,9 +64,9 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = true;
             lastAttackTime = Time.time;
-            animator.SetBool("isAttacking", true);
+            animator.SetTrigger("startAttack");
             Attack();
-            StartCoroutine(AttackWait());
+            StartCoroutine(AttackCombo());
         }
 
         if (jumpsRemaining > 0 && canMove)
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
             {
-                StopCoroutine(AttackWait());
+                StopCoroutine(AttackCombo());
                 animator.SetBool("secondSwing", false);
                 animator.SetBool("isAttacking", false);
                 isAttacking = false;
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Attack");
     }
 
-    public IEnumerator AttackWait()
+    public IEnumerator AttackCombo()
     {
         Debug.Log("Coroutine starting");
         bool secondSwing = false;
@@ -190,9 +190,10 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(0.05f);
+
         animator.SetBool("secondSwing", false);
-        animator.SetBool("isAttacking", false);
-        yield return new WaitForSeconds(0.1f);
+        animator.SetTrigger("endAttack");
         isAttacking = false;
         Debug.Log("Coroutine finished");
     }
