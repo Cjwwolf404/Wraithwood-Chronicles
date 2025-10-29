@@ -5,34 +5,16 @@ using UnityEngine;
 [RequireComponent(typeof(Scylus))]
 public class NPCDialogue : MonoBehaviour
 {
-    [TextArea(3, 10)]
-    public List<string> dialogueLines;
     public string npcName;
 
-    private bool playerInRange = false;
     private int currentLine = 0;
-    private bool isTalking = false;
+    public bool isTalking = false;
 
     public GameObject dialoguePromptUI;
 
     public DialogueUI dialogueUI;
 
-    void Update()
-    {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            if (!isTalking)
-            {
-                StartDialogue();
-            }
-            else
-            {
-                ContinueDialogue();
-            }
-        }
-    }
-
-    public void StartDialogue()
+    public void StartDialogue(List<string> dialogueLines)
     {
         isTalking = true;
         currentLine = 0;
@@ -40,7 +22,7 @@ public class NPCDialogue : MonoBehaviour
         dialogueUI.ShowDialogue(npcName, dialogueLines[currentLine]);
     }
 
-    public void ContinueDialogue()
+    public void ContinueDialogue(List<string> dialogueLines, bool firstInteraction)
     {
         currentLine++;
 
@@ -51,6 +33,12 @@ public class NPCDialogue : MonoBehaviour
         else
         {
             EndDialogue();
+            if(npcName == "Scylus" && firstInteraction)
+            {
+                GetComponent<Scylus>().GetComponent<Collider2D>().enabled = false;
+                GetComponent<Scylus>().firstInteraction = false;
+                StartCoroutine(GetComponent<Scylus>().ScylusTeleport());
+            }
         }
     }
 
@@ -59,24 +47,5 @@ public class NPCDialogue : MonoBehaviour
         isTalking = false;
         dialoguePromptUI.SetActive(true);
         dialogueUI.HideDialogue();
-    }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (!GetComponent<Scylus>().isInfected && collision.CompareTag("Player"))
-        {
-            playerInRange = true;
-            dialoguePromptUI.SetActive(true);
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            playerInRange = false;
-            isTalking = false;
-            dialoguePromptUI.SetActive(false);
-        }
     }
 }

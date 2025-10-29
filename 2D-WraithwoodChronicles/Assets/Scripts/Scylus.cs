@@ -5,26 +5,36 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(NPCDialogue))]
 public class Scylus : MonoBehaviour
 {
+    [Header("Status")]
     public bool isInfected = true;
+    public Transform scylusSpawnPoint;
 
-    private bool playerInRange = false;
+    [Header("Dialogue Lines")]
+    [TextArea(3, 10)]
+    public List<string> dialogueLines1;
+    [TextArea(3, 10)]
+    public List<string> dialogueLines2;
+    public bool firstInteraction = true;
 
-    public GameObject player;
-    public PlayerController playerController;
-
+    [Header("Infection Particles")]
     public ParticleSystem infectionGlowPrefab;
     private ParticleSystem instantiatedInfectionGlowPrefab;
     public ParticleSystem clearingInfectionPrefab;
-    private bool isMoving;
 
+    [Header("Player References")]
+    public GameObject player;
+    public PlayerController playerController;
+    private bool playerInRange = false;
 
-    public Animator animator;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         instantiatedInfectionGlowPrefab = Instantiate(infectionGlowPrefab, new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.identity);
     }
 
@@ -35,37 +45,100 @@ public class Scylus : MonoBehaviour
         {
             playerController.DisableMovement();
             UIManager.Instance.ChangeGamePromptPanelActive(true);
-            isMoving = true;
+            StartCoroutine(FirstScylusInteraction());
         }
-        
-        if (isMoving)
+
+        if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
-            instantiatedInfectionGlowPrefab.transform.position = Vector3.MoveTowards(instantiatedInfectionGlowPrefab.transform.position, player.transform.position, 2f * Time.deltaTime);
-
-            if (Vector3.Distance(instantiatedInfectionGlowPrefab.transform.position, player.transform.position) < 0.1f)
+            if (!GetComponent<NPCDialogue>().isTalking)
             {
-                isMoving = false;
-                instantiatedInfectionGlowPrefab.Stop();
-                Destroy(instantiatedInfectionGlowPrefab.gameObject, 1f);
-
-                ParticleSystem instantiatedClearingInfectionPrefab = Instantiate(clearingInfectionPrefab, player.transform.position, Quaternion.identity);
-                animator.SetBool("isInfected", false);
-
-                isInfected = false;
-                StartCoroutine(ResetCollider());
+                if (firstInteraction)
+                {
+                    GetComponent<NPCDialogue>().StartDialogue(dialogueLines1);
+                }
+                else
+                {
+                    GetComponent<NPCDialogue>().StartDialogue(dialogueLines2);
+                }
+            }
+            else
+            {
+                if (firstInteraction)
+                {
+                    GetComponent<NPCDialogue>().ContinueDialogue(dialogueLines1, true);
+                }
+                else
+                {
+                    GetComponent<NPCDialogue>().ContinueDialogue(dialogueLines2, false);
+                }
             }
         }
     }
 
-    IEnumerator ResetCollider()
+    IEnumerator FirstScylusInteraction()
     {
-        yield return new WaitForSeconds(6.5f);
+        while (Vector3.Distance(instantiatedInfectionGlowPrefab.transform.position, player.transform.position) > 0.1f)
+        {
+            instantiatedInfectionGlowPrefab.transform.position = Vector3.MoveTowards(instantiatedInfectionGlowPrefab.transform.position, player.transform.position, 3f * Time.deltaTime);
+            yield return null;
+        }
 
-        playerController.EnableMovement();
+        instantiatedInfectionGlowPrefab.Stop();
+        Destroy(instantiatedInfectionGlowPrefab.gameObject, 1f);
+
+        Instantiate(clearingInfectionPrefab, player.transform.position, Quaternion.identity);
+
+        yield return new WaitForSeconds(2f);
+
+        StartCoroutine(UIManager.Instance.FadeInBlackScreen());
+
+        yield return new WaitForSeconds(2f);
+
+        UIManager.Instance.SetupAbilityScreen("Claw Ability Obtained", "Left-click to slash enemies");
+        UIManager.Instance.ChangeAbilityScreenActive(false);
+        StartCoroutine(UIManager.Instance.AbilityGainedScreen());
+
+        yield return new WaitForSeconds(4.5f);
+
+        while (!Input.GetMouseButtonDown(0))
+        {
+            yield return null;
+        }
+
+        UIManager.Instance.ChangeAbilityScreenActive(true);
+        StartCoroutine(UIManager.Instance.FadeOutBlackScreen());
+
+        animator.SetBool("isInfected", false);
+        isInfected = false;
+
+        yield return new WaitForSeconds(2f);
+
+        animator.SetTrigger("standUp");
+
+        yield return new WaitForSeconds(3f);
+
         GetComponent<Collider2D>().enabled = false;
         GetComponent<Collider2D>().enabled = true;
+    }
 
-        yield return null;
+    public IEnumerator ScylusTeleport()
+    {
+        playerController.DisableMovement();
+
+        StartCoroutine(UIManager.Instance.FadeInBlackScreen());
+
+        yield return new WaitForSeconds(2f);
+
+        transform.position = scylusSpawnPoint.position;
+        GetComponent<Collider2D>().enabled = true;
+
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(UIManager.Instance.FadeOutBlackScreen());
+
+        yield return new WaitForSeconds(1f);
+
+        playerController.EnableMovement();
     }
     
     void OnTriggerEnter2D(Collider2D collision)
@@ -73,8 +146,14 @@ public class Scylus : MonoBehaviour
         if (isInfected && collision.CompareTag("Player"))
         {
             playerInRange = true;
-            UIManager.Instance.ChangeGamePromptText("Right Click to Absorb the Infection");
+            UIManager.Instance.ChangeGamePromptText("Right-click to Absorb the Infection");
             UIManager.Instance.ChangeGamePromptPanelActive(false);
+        }
+
+        if (!isInfected && collision.CompareTag("Player"))
+        {
+            playerInRange = true;
+            GetComponent<NPCDialogue>().dialoguePromptUI.SetActive(true);
         }
     }
 
@@ -84,6 +163,13 @@ public class Scylus : MonoBehaviour
         {
             playerInRange = false;
             UIManager.Instance.ChangeGamePromptPanelActive(true);
+        }
+
+        if (!isInfected && collision.CompareTag("Player"))
+        {
+            playerInRange = false;
+            GetComponent<NPCDialogue>().isTalking = false;
+            GetComponent<NPCDialogue>().dialoguePromptUI.SetActive(false);
         }
     }
 }

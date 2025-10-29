@@ -7,8 +7,23 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public GameObject gamePromptPanel;
+    [Header("Black Screen")]
+    public GameObject blackScreenPanel;
+    public CanvasGroup blackScreenCanvasGroup;
+    public float fadeDuration;
 
+    [Header("Death Screen")]
+    public GameObject deathScreenPanel;
+    public CanvasGroup deathScreenCanvasGroup;
+
+    [Header("New Ability Screen")]
+    public GameObject newAbilityPanel;
+    public TMP_Text abilityGainedText;
+    public TMP_Text abilityDescriptionText;
+    public TMP_Text continueText;
+
+    [Header("Game Prompt Panel")]
+    public GameObject gamePromptPanel;
     public TMP_Text gamePromptText;
 
     private void Awake()
@@ -17,16 +32,94 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public IEnumerator FadeInBlackScreen()
     {
-
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            blackScreenCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        blackScreenCanvasGroup.alpha = 1f;
     }
 
-    // Update is called once per frame
-    void Update()
+    public IEnumerator FadeOutBlackScreen()
     {
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            blackScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        blackScreenCanvasGroup.alpha = 0f;
+    }
 
+    public void FadeInDeathScreen()
+    {
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            deathScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            timer += Time.deltaTime;
+        }
+        deathScreenCanvasGroup.alpha = 0f;
+    }
+
+    public void SetupAbilityScreen(string abilityGained, string abilityDescription)
+    {
+        abilityGainedText.text = abilityGained;
+        abilityDescriptionText.text = abilityDescription;
+    }
+
+    public IEnumerator AbilityGainedScreen()
+    {
+        float timer = 0f;
+        Color currentColor = abilityGainedText.color;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            currentColor.a = alpha;
+            abilityGainedText.color = currentColor;
+            yield return null;
+        }
+        currentColor.a = 1f;
+        abilityGainedText.color = currentColor;
+
+        yield return new WaitForSeconds(0.5f);
+
+        timer = 0f;
+        currentColor = abilityDescriptionText.color;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            currentColor.a = alpha;
+            abilityDescriptionText.color = currentColor;
+            yield return null;
+        }
+        currentColor.a = 1f;
+        abilityDescriptionText.color = currentColor;
+
+        yield return new WaitForSeconds(2f);
+
+        continueText.gameObject.SetActive(true);
+    }
+
+    public void ChangeAbilityScreenActive(bool isActive)
+    {
+        if (isActive)
+        {
+            newAbilityPanel.SetActive(false);
+        }
+        else
+        {
+            newAbilityPanel.SetActive(true);
+        }
     }
 
     public void ChangeGamePromptText(string newText)

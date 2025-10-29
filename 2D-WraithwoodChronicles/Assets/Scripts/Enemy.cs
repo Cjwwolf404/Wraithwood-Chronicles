@@ -44,11 +44,11 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
         currentTarget = pointB;
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        animator = GetComponent<Animator>();
         currentHealth = enemyHealth;
     }
 

@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public GameObject attackPoint;
     public float attackRadius;
     public LayerMask enemies;
-    private float attackWait = 1f;
+    private float attackWait = 0.6f;
     private float lastAttackTime;
     private bool isAttacking = false;
 
@@ -42,12 +42,13 @@ public class PlayerController : MonoBehaviour
     private bool canMove = true;
     private bool isKnockedBack = false;
 
-    public Animator animator;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -65,7 +66,6 @@ public class PlayerController : MonoBehaviour
             isAttacking = true;
             lastAttackTime = Time.time;
             animator.SetTrigger("startAttack");
-            Attack();
             StartCoroutine(AttackCombo());
         }
 
@@ -89,16 +89,29 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y > 0)
         {
             animator.SetBool("isJumping", true);
+
+            if(isAttacking)
+            {
+                animator.SetBool("isJumping", false);
+            }
         }
 
         if (rb.velocity.y < 0)
         {
             animator.SetBool("isFalling", true);
+
+            if(isAttacking)
+            {
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isFalling", false);
+            }
         }
 
         if(playerHealth <= 0)
         {
-            Debug.Log("Player died");
+            canMove = false;
+            StartCoroutine(UIManager.Instance.FadeInBlackScreen());
+            UIManager.Instance.FadeInDeathScreen();
         }
     }
 
@@ -109,18 +122,6 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
             animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
             animator.SetFloat("yVelocity", rb.velocity.y);
-        }
-
-        if(isAttacking)
-        {
-            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-            {
-                StopCoroutine(AttackCombo());
-                animator.SetBool("secondSwing", false);
-                animator.SetBool("isAttacking", false);
-                isAttacking = false;
-                Debug.Log("Attack cancelled");
-            }
         }
     }
 
@@ -155,14 +156,12 @@ public class PlayerController : MonoBehaviour
         {
             enemyGameObject.GetComponent<Enemy>().TakeDamage(playerDamage, transform.position, knockbackForce);
         }
-
-        Debug.Log("Attack");
     }
 
     public IEnumerator AttackCombo()
     {
-        Debug.Log("Coroutine starting");
         bool secondSwing = false;
+
         yield return new WaitForSeconds(0.05f);
 
         while (Time.time - lastAttackTime < attackWait)
@@ -173,18 +172,19 @@ public class PlayerController : MonoBehaviour
                 {
                     lastAttackTime = Time.time;
                     animator.SetBool("secondSwing", true);
-                    Attack();
                     secondSwing = true;
-                    Debug.Log("Second swing");
                 }
                 else
                 {
                     lastAttackTime = Time.time;
                     animator.SetBool("secondSwing", false);
-                    Attack();
                     secondSwing = false;
-                    Debug.Log("First swing");
                 }
+            }
+
+            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetButtonDown("Jump"))
+            {
+                break;
             }
 
             yield return null;
@@ -195,7 +195,6 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("secondSwing", false);
         animator.SetTrigger("endAttack");
         isAttacking = false;
-        Debug.Log("Coroutine finished");
     }
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
