@@ -2,10 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
+
+    [Header("Player UI")]
+    public Slider healthBar;
+    public TMP_Text curseEnergyAmount;
 
     [Header("Black Screen")]
     public GameObject blackScreenPanel;
@@ -30,6 +35,16 @@ public class UIManager : MonoBehaviour
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void UpdateHealthBar(float currentPlayerHealth)
+    {
+        healthBar.value = currentPlayerHealth;
+    }
+
+    public void UpdateCurseEnergyAmount(float currentCurseEnergyAmount)
+    {
+        curseEnergyAmount.text = currentCurseEnergyAmount.ToString();
     }
 
     public IEnumerator FadeInBlackScreen()

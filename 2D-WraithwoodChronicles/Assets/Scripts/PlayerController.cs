@@ -14,11 +14,12 @@ public class PlayerController : MonoBehaviour
     public int maxJumps;
     private int jumpsRemaining;
 
-    [Header("Health and Damage")]
-    public float playerHealth;
+    [Header("Health, Damage, and Curse Energy")]
+    public float maxPlayerHealth;
     private float currentHealth;
     public float playerDamage;
     public float knockbackForce;
+    public float curseEnergyAmount;
 
     [Header("Attack Circle")]
     public GameObject attackPoint;
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        currentHealth = maxPlayerHealth;
     }
 
     void Update()
@@ -107,7 +110,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(playerHealth <= 0)
+        if(currentHealth <= 0)
         {
             canMove = false;
             StartCoroutine(UIManager.Instance.FadeInBlackScreen());
@@ -199,7 +202,8 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
     {
-        playerHealth -= damage;
+        currentHealth -= damage;
+        UIManager.Instance.UpdateHealthBar(currentHealth);
 
         if (isKnockedBack) return;
 
