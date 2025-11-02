@@ -138,6 +138,8 @@ public class Scylus : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        GameManager.Instance.hasClawAbility = true;
+
         playerController.EnableMovement();
     }
     

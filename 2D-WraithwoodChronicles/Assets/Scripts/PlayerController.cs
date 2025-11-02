@@ -64,12 +64,15 @@ public class PlayerController : MonoBehaviour
         
         FlipSprite();
 
-        if (Input.GetMouseButtonDown(0) && canMove && !isAttacking)
+        if(GameManager.Instance.hasClawAbility)
         {
-            isAttacking = true;
-            lastAttackTime = Time.time;
-            animator.SetTrigger("startAttack");
-            StartCoroutine(AttackCombo());
+            if (Input.GetMouseButtonDown(0) && canMove && !isAttacking)
+            {
+                isAttacking = true;
+                lastAttackTime = Time.time;
+                animator.SetTrigger("startAttack");
+                StartCoroutine(AttackCombo());
+            }
         }
 
         if (jumpsRemaining > 0 && canMove)
