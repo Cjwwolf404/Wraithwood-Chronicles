@@ -8,22 +8,37 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    //private SaveState SaveState = new SaveState();
-    private IDataService DataService = new JsonDataService();
+    public GameObject player;
+    public PlayerController playerController;
 
+    private IDataService DataService = new JsonDataService();
+    
+    public List<GameObject> playerSpawnPoints;
+
+    public GameObject currentSpawnPoint;
     public bool hasClawAbility;
     public bool hasClingAbility;
 
     void Awake()
     {
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        if(currentSpawnPoint != null)
+        {
+            player.transform.position = currentSpawnPoint.transform.position;
+        }
     }
 
     // Update is called once per frame
@@ -32,10 +47,22 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void ChangeSpawnPoint(int index)
+    {
+        currentSpawnPoint = playerSpawnPoints[index];
+    }
+
+    public void RespawnPlayer()
+    {
+        playerController.currentHealth = playerController.maxPlayerHealth;
+        player.transform.position = currentSpawnPoint.transform.position;
+    }
+
     public void SerializeJson()
     {
         var saveState = new SaveState
         {
+            CurrentSpawnPoint = currentSpawnPoint,
             HasClawAbility = hasClawAbility,
             HasClingAbility = hasClingAbility,
         };
@@ -62,14 +89,15 @@ public class GameManager : MonoBehaviour
     public void ApplySaveData(SaveState data)
     {
         Debug.Log("applying save data..." + JsonConvert.SerializeObject(data, Formatting.Indented));
+        currentSpawnPoint = data.CurrentSpawnPoint;
         hasClawAbility = data.HasClawAbility;
         hasClingAbility = data.HasClingAbility;
-        Debug.Log(hasClawAbility);
     }
     public class SaveState
     {
-        public bool HasClawAbility { get; set; }
-        public bool HasClingAbility { get; set; }
+        public GameObject CurrentSpawnPoint;
+        public bool HasClawAbility;
+        public bool HasClingAbility;
     }
 }
 
