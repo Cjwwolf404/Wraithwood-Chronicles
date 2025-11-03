@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class JsonDataService : IDataService
 {
-    public bool SaveData<T>(string ReletivePath, T Data, bool Encrypted)
+    public bool SaveData<T>(string ReletivePath, T Data)
     {
         string path = Application.persistentDataPath + ReletivePath;
 
@@ -34,7 +34,7 @@ public class JsonDataService : IDataService
         }
     }
 
-    public T LoadData<T>(string ReletivePath, bool Encrypted)
+    public T LoadData<T>(string ReletivePath)
     {
         string path = Application.persistentDataPath + ReletivePath;
 

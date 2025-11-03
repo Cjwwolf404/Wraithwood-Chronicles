@@ -1,6 +1,6 @@
 public interface IDataService
 {
-    bool SaveData<T>(string ReletivePath, T Data, bool Encrypted);
+    bool SaveData<T>(string ReletivePath, T Data);
 
-    T LoadData<T>(string ReletivePath, bool Encrypted);
+    T LoadData<T>(string ReletivePath);
 }

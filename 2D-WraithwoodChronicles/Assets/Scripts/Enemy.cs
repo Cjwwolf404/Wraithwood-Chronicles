@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
     private bool isChasing = false;
     private bool canMove = true;
     private bool isKnockedBack = false;
-    private bool isFacingRight = true;
+    private bool isFacingRight = false;
 
     private Animator animator;
 
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        currentTarget = pointB;
+        currentTarget = pointA;
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         currentHealth = enemyHealth;
@@ -107,6 +107,7 @@ public class Enemy : MonoBehaviour
 
         if (isChasing) //Attacking player state
         {
+            animator.SetBool("isAttacking", true);
             float relativePosition = player.position.x - transform.position.x;
             direction = Mathf.Sign(relativePosition);
 
@@ -117,6 +118,7 @@ public class Enemy : MonoBehaviour
         }
         else //Patrolling state
         {
+            animator.SetBool("isAttacking", false);
             direction = Mathf.Sign(currentTarget.position.x - transform.position.x);
             if (Mathf.Abs(transform.position.x - currentTarget.position.x) <= 0.1f)
             {
@@ -140,7 +142,7 @@ public class Enemy : MonoBehaviour
         currentTarget = (currentTarget == pointA) ? pointB : pointA;
         isFacingRight = !isFacingRight;
         Vector3 ls = transform.localScale;
-        ls.y *= -1;
+        ls.x *= -1;
         transform.localScale = ls;
         lastFlipTime = Time.time;
     }
