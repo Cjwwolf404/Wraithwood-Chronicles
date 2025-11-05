@@ -2058,7 +2058,7 @@ Transform:
   m_GameObject: {fileID: 294906311}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -1.86, z: 0}
+  m_LocalPosition: {x: -2, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3290,7 +3290,7 @@ Transform:
   m_GameObject: {fileID: 551738026}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.47, y: -1.75, z: 0}
+  m_LocalPosition: {x: -2, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3325,6 +3325,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb115a46728cad4996df9c20e750a47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 824704030}
+  playerController: {fileID: 824704035}
+  playerSpawnPoints:
+  - {fileID: 1153367234}
+  - {fileID: 1012760639}
+  currentSpawnPoint: {fileID: 0}
   hasClawAbility: 0
   hasClingAbility: 0
 --- !u!4 &560578189
@@ -3367,7 +3373,7 @@ Transform:
   m_GameObject: {fileID: 592506178}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.39, y: -1.83, z: 0}
+  m_LocalPosition: {x: -2, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6048,6 +6054,7 @@ MonoBehaviour:
   jumpTakeOffSpeed: 20
   maxJumps: 1
   maxPlayerHealth: 10
+  currentHealth: 0
   playerDamage: 1
   knockbackForce: 10
   curseEnergyAmount: 0
@@ -6494,7 +6501,7 @@ Transform:
   m_GameObject: {fileID: 947010897}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.47, y: -1.86, z: 0}
+  m_LocalPosition: {x: -2, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7060,7 +7067,7 @@ Transform:
   m_GameObject: {fileID: 1012760639}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 224.97, y: -72.83, z: 0}
+  m_LocalPosition: {x: 224.97, y: -71.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -14756,12 +14763,12 @@ SceneRoots:
   - {fileID: 1786785330}
   - {fileID: 1257461736}
   - {fileID: 824704034}
+  - {fileID: 239791646}
+  - {fileID: 789484500}
+  - {fileID: 1010517287}
+  - {fileID: 1001726356}
   - {fileID: 197788816}
   - {fileID: 394651312}
   - {fileID: 2057232570}
-  - {fileID: 1001726356}
   - {fileID: 787480888}
   - {fileID: 1237833884}
-  - {fileID: 789484500}
-  - {fileID: 1010517287}
-  - {fileID: 239791646}

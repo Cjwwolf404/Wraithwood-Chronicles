@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Health, Damage, and Curse Energy")]
     public float maxPlayerHealth;
-    private float currentHealth;
+    public float currentHealth;
     public float playerDamage;
     public float knockbackForce;
     public float curseEnergyAmount;
