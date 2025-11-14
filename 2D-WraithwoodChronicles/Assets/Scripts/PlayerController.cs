@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public float playerDamage;
     public float knockbackForce;
     public float curseEnergyAmount;
+    private bool isDead = false;
 
     [Header("Attack Circle")]
     public GameObject attackPoint;
@@ -45,12 +46,19 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
+        canMove = true;
+        isDead = false;
         currentHealth = maxPlayerHealth;
     }
 
@@ -113,11 +121,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(currentHealth <= 0)
+        if(currentHealth <= 0 && !isDead)
         {
+            isDead = true;
             canMove = false;
-            StartCoroutine(UIManager.Instance.FadeInBlackScreen());
-            UIManager.Instance.FadeInDeathScreen();
+            GameManager.Instance.PlayerDeath();
         }
     }
 
