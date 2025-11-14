@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
+
     private Rigidbody2D rb;
 
     [Header("Movement")]
@@ -46,11 +48,6 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -125,7 +122,8 @@ public class PlayerController : MonoBehaviour
         {
             isDead = true;
             canMove = false;
-            GameManager.Instance.PlayerDeath();
+            // rb.velocity = Vector3.zero;
+            MenuManager.Instance.FadeInDeathScreen();
         }
     }
 

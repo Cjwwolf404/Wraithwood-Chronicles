@@ -27,6 +27,7 @@ public class Scylus : MonoBehaviour
     [Header("Player References")]
     public GameObject player;
     public PlayerController playerController;
+    public GameObject playerBoundaryMV;
     private bool playerInRange = false;
 
     private Animator animator;
@@ -139,6 +140,8 @@ public class Scylus : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         GameManager.Instance.hasClawAbility = true;
+
+        playerBoundaryMV.SetActive(false);
 
         playerController.EnableMovement();
     }

@@ -487,6 +487,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 0}
   pauseMenu: {fileID: 0}
+  deathMenu: {fileID: 0}
+  deathScreenCanvasGroup: {fileID: 0}
+  fadeDuration: 0
 --- !u!1 &757093753
 GameObject:
   m_ObjectHideFlags: 0
@@ -2168,8 +2171,8 @@ Canvas:
   m_GameObject: {fileID: 1675542762}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 320567546}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2179,7 +2182,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1156529935
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &1675542766
@@ -2238,7 +2241,6 @@ MonoBehaviour:
   player: {fileID: 0}
   playerController: {fileID: 0}
   playerSpawnPoints: []
-  currentSpawnPoint: {fileID: 0}
   hasClawAbility: 0
   hasClingAbility: 0
 --- !u!4 &1717679177

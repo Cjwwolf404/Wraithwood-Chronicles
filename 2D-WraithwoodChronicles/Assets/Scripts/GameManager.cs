@@ -10,14 +10,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public GameObject player;
-    public PlayerController playerController;
 
     private IDataService DataService = new JsonDataService();
 
     public List<SpawnPoint> playerSpawnPoints;
 
     private SpawnPoint beginningSpawn;
-    private SpawnPoint currentSpawnPoint;
+    public SpawnPoint currentSpawnPoint;
     public bool hasClawAbility;
     public bool hasClingAbility;
 
@@ -32,6 +31,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        SpawnPoint[] foundSpawnPoints = FindObjectsOfType<SpawnPoint>();
+        foreach(var sp in foundSpawnPoints)
+        {
+            playerSpawnPoints.Add(sp);
+        }
     }
 
     // Start is called before the first frame update
@@ -40,25 +47,20 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void SpawnPlayer()
     {
         Debug.Log("Spawning player");
+        player = GameObject.FindGameObjectWithTag("Player");
 
         if (currentSpawnPoint != null)
         {
             player.transform.position = currentSpawnPoint.transform.position;
         }
-        else
-        {
-            currentSpawnPoint = beginningSpawn;
-            player.transform.position = beginningSpawn.transform.position;
-        }
+        // else
+        // {
+        //     currentSpawnPoint = beginningSpawn;
+        //     player.transform.position = beginningSpawn.transform.position;
+        // }
     }
 
     public void ChangeSpawnPoint(SpawnPoint spawnPoint)
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
     public void PlayerDeath()
     {
         StartCoroutine(UIManager.Instance.FadeInBlackScreen());
-        UIManager.Instance.FadeInDeathScreen();
+        //UIManager.Instance.FadeInDeathScreen();
     }
 
     public void RespawnPlayer()

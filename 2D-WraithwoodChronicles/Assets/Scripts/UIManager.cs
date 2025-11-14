@@ -17,10 +17,6 @@ public class UIManager : MonoBehaviour
     public CanvasGroup blackScreenCanvasGroup;
     public float fadeDuration;
 
-    [Header("Death Screen")]
-    public GameObject deathScreenPanel;
-    public CanvasGroup deathScreenCanvasGroup;
-
     [Header("New Ability Screen")]
     public GameObject newAbilityPanel;
     public TMP_Text abilityGainedText;
@@ -34,7 +30,11 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        blackScreenCanvasGroup.alpha = 0f;
     }
 
     public void UpdateHealthBar(float currentPlayerHealth)
@@ -69,17 +69,6 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         blackScreenCanvasGroup.alpha = 0f;
-    }
-
-    public void FadeInDeathScreen()
-    {
-        float timer = 0f;
-        while (timer < fadeDuration)
-        {
-            deathScreenCanvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
-            timer += Time.deltaTime;
-        }
-        deathScreenCanvasGroup.alpha = 0f;
     }
 
     public void SetupAbilityScreen(string abilityGained, string abilityDescription)

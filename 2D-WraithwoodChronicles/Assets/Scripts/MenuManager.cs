@@ -5,14 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    public static MenuManager Instance;
     public GameObject mainCanvas;
     public GameObject pauseMenu;
+    public GameObject deathMenu;
+    public CanvasGroup deathScreenCanvasGroup;
+    public float fadeDuration;
 
     public static bool gameIsPaused;
 
+    void Awake()
+    {
+        Instance = this;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name != "MainMenu")
+        if (Input.GetKeyDown(KeyCode.Escape) && SceneManager.GetActiveScene().name != "MainMenu" && !deathMenu.activeInHierarchy)
         {
             if(gameIsPaused)
             {
@@ -52,6 +61,25 @@ public class MenuManager : MonoBehaviour
         gameIsPaused = false;
     }
 
+    public void FadeInDeathScreen()
+    {
+        mainCanvas.SetActive(false);
+        deathMenu.SetActive(true);
+
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            deathScreenCanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            timer += Time.deltaTime;
+        }
+        deathScreenCanvasGroup.alpha = 1f;
+    }
+
+    public void RestartGame()
+    {
+        GameManager.Instance.RespawnPlayer();
+    }
+
     public void SaveGame()
     {
         GameManager.Instance.SerializeJson();
@@ -61,6 +89,7 @@ public class MenuManager : MonoBehaviour
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
+        mainCanvas.SetActive(true);
         SceneManager.LoadScene("MainMenu");
     }
 
