@@ -588,7 +588,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 40814719}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: RestartGame
+        m_MethodName: LoadGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3393,7 +3393,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 163.02, y: -29.4, z: -10}
+  m_LocalPosition: {x: 264.4, y: -29.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3989,7 +3989,7 @@ Transform:
   m_GameObject: {fileID: 685983368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 163.02, y: -29.4, z: -10}
+  m_LocalPosition: {x: 264.4, y: -29.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6230,7 +6230,7 @@ Transform:
   m_GameObject: {fileID: 824704030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 163.02, y: -29.4, z: 0}
+  m_LocalPosition: {x: 264.4, y: -29.4, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6258,6 +6258,7 @@ MonoBehaviour:
   playerDamage: 1
   knockbackForce: 10
   curseEnergyAmount: 0
+  canTakeDamage: 0
   attackPoint: {fileID: 1821140103}
   attackRadius: 1.4
   enemies:
@@ -6904,6 +6905,7 @@ MonoBehaviour:
   chaseSpeed: 7
   detectionRange: 8
   knockbackForce: 10
+  playerController: {fileID: 824704035}
   groundCheck: {fileID: 551738027}
   groundCheckDistance: 0.4
   flipCooldown: 0.5
@@ -8061,6 +8063,7 @@ MonoBehaviour:
   chaseSpeed: 7
   detectionRange: 8
   knockbackForce: 10
+  playerController: {fileID: 824704035}
   groundCheck: {fileID: 783405729}
   groundCheckDistance: 0.4
   flipCooldown: 0.5
@@ -8497,6 +8500,7 @@ MonoBehaviour:
   chaseSpeed: 7
   detectionRange: 8
   knockbackForce: 10
+  playerController: {fileID: 824704035}
   groundCheck: {fileID: 592506179}
   groundCheckDistance: 0.4
   flipCooldown: 0.5
@@ -9141,6 +9145,7 @@ MonoBehaviour:
   chaseSpeed: 7
   detectionRange: 8
   knockbackForce: 10
+  playerController: {fileID: 824704035}
   groundCheck: {fileID: 294906312}
   groundCheckDistance: 0.4
   flipCooldown: 0.5
@@ -9470,6 +9475,7 @@ MonoBehaviour:
   chaseSpeed: 7
   detectionRange: 8
   knockbackForce: 10
+  playerController: {fileID: 824704035}
   groundCheck: {fileID: 947010898}
   groundCheckDistance: 0.4
   flipCooldown: 0.5

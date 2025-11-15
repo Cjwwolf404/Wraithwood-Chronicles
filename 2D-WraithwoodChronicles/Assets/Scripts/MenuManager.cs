@@ -75,11 +75,6 @@ public class MenuManager : MonoBehaviour
         deathScreenCanvasGroup.alpha = 1f;
     }
 
-    public void RestartGame()
-    {
-        GameManager.Instance.RespawnPlayer();
-    }
-
     public void SaveGame()
     {
         GameManager.Instance.SerializeJson();

@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     public float chaseSpeed;
     public float detectionRange;
     public float knockbackForce;
+    public PlayerController playerController;
     private Transform player;
 
     [Header("Edge Detection")]
@@ -154,8 +155,9 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision) //Attack
     {
-        if (collision.gameObject.CompareTag("Player"))
+        while (collision.gameObject.CompareTag("Player") && playerController.canTakeDamage)
         {
+            Debug.Log("Attacking");
             collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage, transform.position, knockbackForce);
             StartCoroutine(AttackCooldown());
         }
@@ -164,10 +166,12 @@ public class Enemy : MonoBehaviour
     IEnumerator AttackCooldown()
     {
         DisableMovement();
+        animator.SetBool("canMove", false);
 
         yield return new WaitForSeconds(0.5f);
 
         EnableMovement();
+        animator.SetBool("canMove", true);
 
         yield return null;
     }

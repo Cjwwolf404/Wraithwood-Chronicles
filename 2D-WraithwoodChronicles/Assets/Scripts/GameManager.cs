@@ -41,10 +41,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void ChangeSpawnPoint(SpawnPoint spawnPoint)
     {
-
+        currentSpawnPoint = spawnPoint;
     }
 
     public void SpawnPlayer()
@@ -56,28 +55,6 @@ public class GameManager : MonoBehaviour
         {
             player.transform.position = currentSpawnPoint.transform.position;
         }
-        // else
-        // {
-        //     currentSpawnPoint = beginningSpawn;
-        //     player.transform.position = beginningSpawn.transform.position;
-        // }
-    }
-
-    public void ChangeSpawnPoint(SpawnPoint spawnPoint)
-    {
-        currentSpawnPoint = spawnPoint;
-    }
-
-    public void PlayerDeath()
-    {
-        StartCoroutine(UIManager.Instance.FadeInBlackScreen());
-        //UIManager.Instance.FadeInDeathScreen();
-    }
-
-    public void RespawnPlayer()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //player.transform.position = currentSpawnPoint.transform.position;
     }
 
     public void SerializeJson()
@@ -124,7 +101,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //currentSpawnPoint.position = data.CurrentSpawnPoint;
         hasClawAbility = data.HasClawAbility;
         hasClingAbility = data.HasClingAbility;
         Debug.Log(hasClawAbility + "" + hasClingAbility + " " + currentSpawnPoint.spawnID);
@@ -133,11 +109,7 @@ public class GameManager : MonoBehaviour
     }
     public class SaveState
     {
-        // [JsonConverter(typeof(JsonDataService.Vector3Converter))]
-        // public Vector3 CurrentSpawnPoint;
-
         public string CurrentSpawnPointID;
-        
         public bool HasClawAbility;
         public bool HasClingAbility;
     }

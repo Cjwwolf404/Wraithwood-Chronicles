@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public float playerDamage;
     public float knockbackForce;
     public float curseEnergyAmount;
+    public bool canTakeDamage;
     private bool isDead = false;
 
     [Header("Attack Circle")]
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         canMove = true;
+        canTakeDamage = true;
         isDead = false;
         currentHealth = maxPlayerHealth;
     }
@@ -122,7 +124,6 @@ public class PlayerController : MonoBehaviour
         {
             isDead = true;
             canMove = false;
-            // rb.velocity = Vector3.zero;
             MenuManager.Instance.FadeInDeathScreen();
         }
     }
@@ -211,8 +212,11 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
     {
+        Debug.Log("Taking Damage");
         currentHealth -= damage;
         UIManager.Instance.UpdateHealthBar(currentHealth);
+
+        StartCoroutine(InvincibilityFrames());
 
         if (isKnockedBack) return;
 
@@ -225,6 +229,15 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(new Vector2(knockbackDirection * knockbackForce, 3f), ForceMode2D.Impulse);
 
         Invoke(nameof(EndKnockback), 0.2f);
+    }
+
+    public IEnumerator InvincibilityFrames()
+    {
+        canTakeDamage = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        canTakeDamage = true;
     }
     
     private void EndKnockback()
