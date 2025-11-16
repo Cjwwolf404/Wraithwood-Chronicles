@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     public float currentHealth;
     public float playerDamage;
     public float knockbackForce;
-    public float curseEnergyAmount;
     public bool canTakeDamage;
     private bool isDead = false;
 
@@ -212,11 +211,10 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage, Vector2 sourcePosition, float knockbackForce)
     {
-        Debug.Log("Taking Damage");
         currentHealth -= damage;
         UIManager.Instance.UpdateHealthBar(currentHealth);
 
-        StartCoroutine(InvincibilityFrames());
+        canTakeDamage = false;
 
         if (isKnockedBack) return;
 
@@ -228,15 +226,12 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(new Vector2(knockbackDirection * knockbackForce, 3f), ForceMode2D.Impulse);
 
+        Invoke(nameof(ResetInvincibilityFrames), 1f);
         Invoke(nameof(EndKnockback), 0.2f);
     }
 
-    public IEnumerator InvincibilityFrames()
+    public void ResetInvincibilityFrames()
     {
-        canTakeDamage = false;
-
-        yield return new WaitForSeconds(0.5f);
-
         canTakeDamage = true;
     }
     

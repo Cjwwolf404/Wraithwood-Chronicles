@@ -13,10 +13,14 @@ public class GameManager : MonoBehaviour
 
     private IDataService DataService = new JsonDataService();
 
+    [Header("Spawn Points")]
+
     public List<SpawnPoint> playerSpawnPoints;
 
     private SpawnPoint beginningSpawn;
     public SpawnPoint currentSpawnPoint;
+    [Header("Player Status")]
+    public int currentCurseEnergyAmount;
     public bool hasClawAbility;
     public bool hasClingAbility;
 
@@ -48,7 +52,6 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        Debug.Log("Spawning player");
         player = GameObject.FindGameObjectWithTag("Player");
 
         if (currentSpawnPoint != null)
@@ -62,6 +65,7 @@ public class GameManager : MonoBehaviour
         SaveState saveState = new SaveState
         {
             CurrentSpawnPointID = currentSpawnPoint.spawnID,
+            CurrentCurseEnergyAmount = currentCurseEnergyAmount,
             HasClawAbility = hasClawAbility,
             HasClingAbility = hasClingAbility,
         };
@@ -90,8 +94,6 @@ public class GameManager : MonoBehaviour
         //Wait for scene to load
         yield return null;
 
-        Debug.Log("applying save data..." + JsonConvert.SerializeObject(data, Formatting.Indented));
-
         foreach(var sp in playerSpawnPoints)
         {
             if(sp.spawnID == data.CurrentSpawnPointID)
@@ -101,15 +103,18 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        currentCurseEnergyAmount = data.CurrentCurseEnergyAmount;
+        UIManager.Instance.UpdateCurseEnergyAmount();
+
         hasClawAbility = data.HasClawAbility;
         hasClingAbility = data.HasClingAbility;
-        Debug.Log(hasClawAbility + "" + hasClingAbility + " " + currentSpawnPoint.spawnID);
 
         SpawnPlayer();
     }
     public class SaveState
     {
         public string CurrentSpawnPointID;
+        public int CurrentCurseEnergyAmount;
         public bool HasClawAbility;
         public bool HasClingAbility;
     }

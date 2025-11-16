@@ -42,9 +42,9 @@ public class UIManager : MonoBehaviour
         healthBar.value = currentPlayerHealth;
     }
 
-    public void UpdateCurseEnergyAmount(float currentCurseEnergyAmount)
+    public void UpdateCurseEnergyAmount()
     {
-        curseEnergyAmount.text = currentCurseEnergyAmount.ToString();
+        curseEnergyAmount.text = GameManager.Instance.currentCurseEnergyAmount.ToString();
     }
 
     public IEnumerator FadeInBlackScreen()

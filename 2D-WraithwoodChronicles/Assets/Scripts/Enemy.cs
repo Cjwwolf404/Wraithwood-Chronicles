@@ -9,6 +9,8 @@ public class Enemy : MonoBehaviour
     public float enemyHealth;
     private float currentHealth;
     public float enemyDamage;
+    public int dropAmount;
+    private bool canGiveDamage;
 
     [Header("Patrolling")]
     public Transform pointA;
@@ -39,6 +41,8 @@ public class Enemy : MonoBehaviour
     private bool isKnockedBack = false;
     private bool isFacingRight = false;
 
+    public GameObject curseEnergyPrefab;
+
     private Animator animator;
 
     // Start is called before the first frame update
@@ -51,6 +55,7 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         currentHealth = enemyHealth;
+        canGiveDamage = true;
     }
 
     // Update is called once per frame
@@ -86,15 +91,18 @@ public class Enemy : MonoBehaviour
             MoveEnemy();
         }
 
-        if (enemyHealth < currentHealth)
-        {
-            currentHealth = enemyHealth;
-            animator.SetTrigger("Attacked");
-        }
+        // if (currentHealth < enemyHealth)
+        // {
+        //     currentHealth = enemyHealth;
+        //     animator.SetTrigger("Attacked");
+        // }
 
-        if (enemyHealth <= 0)
+        if (currentHealth <= 0)
         {
-            Debug.Log("Enemy died");
+            for(int i = 0; i < dropAmount; i++)
+            {
+                Instantiate(curseEnergyPrefab, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
         }
     }
@@ -153,13 +161,17 @@ public class Enemy : MonoBehaviour
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
 
-    void OnCollisionEnter2D(Collision2D collision) //Attack
+    void OnCollisionStay2D(Collision2D collision) //Attack
     {
-        while (collision.gameObject.CompareTag("Player") && playerController.canTakeDamage)
+        if(!canGiveDamage) return;
+
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Attacking");
-            collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage, transform.position, knockbackForce);
-            StartCoroutine(AttackCooldown());
+            if(playerController.canTakeDamage)
+            {
+                collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage, transform.position, knockbackForce);
+                StartCoroutine(AttackCooldown());
+            }
         }
     }
 
@@ -178,7 +190,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float playerDamage, Vector2 sourcePosition, float knockbackForce)
     {
-        enemyHealth -= playerDamage;
+        currentHealth -= playerDamage;
 
         if (isKnockedBack) return;
 
