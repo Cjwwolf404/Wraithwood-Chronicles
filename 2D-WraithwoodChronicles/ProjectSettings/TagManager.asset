@@ -6,6 +6,8 @@ TagManager:
   tags:
   - NPC
   - InfectedNPC
+  - Enemy
+  - SludgeBall
   layers:
   - Default
   - TransparentFX

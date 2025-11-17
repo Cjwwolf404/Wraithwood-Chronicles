@@ -7,43 +7,44 @@ public class Enemy : MonoBehaviour
 {
     [Header("Attack and Damage")]
     public float enemyHealth;
-    private float currentHealth;
+    private protected float currentHealth;
     public float enemyDamage;
     public int dropAmount;
-    private bool canGiveDamage;
+    private protected bool canGiveDamage;
 
     [Header("Patrolling")]
     public Transform pointA;
     public Transform pointB;
     public float patrolSpeed;
     private Vector2 patrolPointSize = new Vector2(0.5f, 0.5f);
-    private Transform currentTarget;
+    private protected Transform currentTarget;
 
     [Header("Attacking")]
     public float chaseSpeed;
     public float detectionRange;
     public float knockbackForce;
     public PlayerController playerController;
-    private Transform player;
+    private protected Transform player;
 
     [Header("Edge Detection")]
     public Transform groundCheck;
-    public float groundCheckDistance;
-    public float flipCooldown;
-    private float lastFlipTime;
-    public Vector2 groundCheckSize;
-    public LayerMask groundLayer;
+    private protected float groundCheckDistance = 0.4f;
+    private protected float flipCooldown = 0.5f;
+    private protected float lastFlipTime;
+    private protected Vector2 groundCheckSize = new(0.5f, 0.5f);
+    private protected LayerMask groundLayer;
 
-    private Rigidbody2D rb;
+    private protected Rigidbody2D rb;
 
-    private bool isChasing = false;
-    private bool canMove = true;
-    private bool isKnockedBack = false;
-    private bool isFacingRight = false;
+    private protected bool isChasing = false;
+    private protected bool canMove = true;
+    private protected bool isKnockedBack = false;
+    private protected bool isFacingRight = false;
 
+    [Header("Particle System Prefab")]
     public GameObject curseEnergyPrefab;
 
-    private Animator animator;
+    private protected Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -51,94 +52,16 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
+        groundLayer = LayerMask.GetMask("Ground");
+
         currentTarget = pointA;
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         currentHealth = enemyHealth;
         canGiveDamage = true;
     }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
-
-        if (canMove && !isKnockedBack)
-        {
-            if (distanceToPlayer <= detectionRange)
-            {
-                isChasing = true;
-            }
-            else
-            {
-                isChasing = false;
-            }
-
-            if (!IsGroundAhead())
-            {
-                if (isChasing)
-                {
-                    StopAtEdge();
-                    return;
-                }
-
-                if (Time.time - lastFlipTime > flipCooldown)
-                {
-                    FlipEnemy();
-                }
-            }
-
-            MoveEnemy();
-        }
-
-        // if (currentHealth < enemyHealth)
-        // {
-        //     currentHealth = enemyHealth;
-        //     animator.SetTrigger("Attacked");
-        // }
-
-        if (currentHealth <= 0)
-        {
-            for(int i = 0; i < dropAmount; i++)
-            {
-                Instantiate(curseEnergyPrefab, transform.position, Quaternion.identity);
-            }
-            Destroy(gameObject);
-        }
-    }
-
-    private void MoveEnemy()
-    {
-        float verticalVelocity = rb.velocity.y;
-        float speed = isChasing ? chaseSpeed : patrolSpeed;
-
-        float direction = 0f;
-
-        if (isChasing) //Attacking player state
-        {
-            animator.SetBool("isAttacking", true);
-            float relativePosition = player.position.x - transform.position.x;
-            direction = Mathf.Sign(relativePosition);
-
-            if ((relativePosition > 0 && !isFacingRight) || (relativePosition < 0 && isFacingRight))
-            {
-                FlipEnemy();
-            }
-        }
-        else //Patrolling state
-        {
-            animator.SetBool("isAttacking", false);
-            direction = Mathf.Sign(currentTarget.position.x - transform.position.x);
-            if (Mathf.Abs(transform.position.x - currentTarget.position.x) <= 0.1f)
-            {
-                FlipEnemy();
-            }
-        }
-
-        rb.velocity = new Vector2(direction * speed, verticalVelocity);
-    }
     
-    private bool IsGroundAhead()
+    public bool IsGroundAhead()
     {
         Vector2 origin = groundCheck.position + Vector3.right * (isFacingRight ? groundCheckDistance : groundCheckDistance);
         bool hit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundLayer);
@@ -170,21 +93,18 @@ public class Enemy : MonoBehaviour
             if(playerController.canTakeDamage)
             {
                 collision.gameObject.GetComponent<PlayerController>().TakeDamage(enemyDamage, transform.position, knockbackForce);
-                StartCoroutine(AttackCooldown());
+                StartCoroutine(AttackCooldown(0.5f));
             }
         }
     }
 
-    IEnumerator AttackCooldown()
+    protected IEnumerator AttackCooldown(float time)
     {
         DisableMovement();
-        animator.SetBool("canMove", false);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(time);
 
         EnableMovement();
-        animator.SetBool("canMove", true);
-
         yield return null;
     }
 
@@ -214,13 +134,13 @@ public class Enemy : MonoBehaviour
     {
         canMove = false;
         rb.velocity = new Vector2(0f, rb.velocity.y);
-        //animator.SetBool("canMove", false);
+        animator.SetBool("canMove", false);
     }
 
     public void EnableMovement()
     {
         canMove = true;
-        //animator.SetBool("canMove", true);
+        animator.SetBool("canMove", true);
     }
 
     void OnDrawGizmos()
