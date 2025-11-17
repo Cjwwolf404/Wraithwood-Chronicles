@@ -16,10 +16,10 @@ public class GameManager : MonoBehaviour
     [Header("Spawn Points")]
 
     public List<SpawnPoint> playerSpawnPoints;
+    public SpawnPoint beginningSpawn;
 
-    private SpawnPoint beginningSpawn;
-    public SpawnPoint currentSpawnPoint;
     [Header("Player Status")]
+    public SpawnPoint currentSpawnPoint;
     public int currentCurseEnergyAmount;
     public bool hasClawAbility;
     public bool hasClingAbility;
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        player = GameObject.FindGameObjectWithTag("Player");
+        //player = GameObject.FindGameObjectWithTag("Player");
 
         SpawnPoint[] foundSpawnPoints = FindObjectsOfType<SpawnPoint>();
         foreach(var sp in foundSpawnPoints)
@@ -45,9 +45,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ChangeSpawnPoint(SpawnPoint spawnPoint)
+    public IEnumerator SetupNewGame()
     {
-        currentSpawnPoint = spawnPoint;
+        yield return new WaitUntil (() => Instance != null);
+        Debug.Log("Setting up new game");
+        foreach (var sp in playerSpawnPoints)
+        {
+            if (sp.spawnID == "BeginningSpawn")
+            {
+                currentSpawnPoint = sp;
+                break;
+            }
+        }
+
+        currentCurseEnergyAmount = 0;
+        hasClawAbility = false;
+        hasClingAbility = false;
+
+        SpawnPlayer();
     }
 
     public void SpawnPlayer()
@@ -58,6 +73,11 @@ public class GameManager : MonoBehaviour
         {
             player.transform.position = currentSpawnPoint.transform.position;
         }
+    }
+
+    public void ChangeSpawnPoint(SpawnPoint spawnPoint)
+    {
+        currentSpawnPoint = spawnPoint;
     }
 
     public void SerializeJson()
