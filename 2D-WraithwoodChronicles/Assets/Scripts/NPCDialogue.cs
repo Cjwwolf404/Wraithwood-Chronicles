@@ -7,7 +7,7 @@ public class NPCDialogue : MonoBehaviour
 {
     public string npcName;
 
-    private int currentLine = 0;
+    public int currentLine = 0;
     public bool isTalking = false;
 
     public GameObject dialoguePromptUI;

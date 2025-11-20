@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public float enemyDamage;
     public int dropAmount;
     private protected bool canGiveDamage;
+    private protected bool cancelAttackCooldown = false;
 
     [Header("Patrolling")]
     public Transform pointA;
@@ -102,10 +103,25 @@ public class Enemy : MonoBehaviour
     {
         DisableMovement();
 
-        yield return new WaitForSeconds(time);
+        float timer = 0f;
+
+        while(timer < time)
+        {
+            if(cancelAttackCooldown)
+            {
+                Debug.Log("cancelling attack cooldown");
+                cancelAttackCooldown = false;
+                EnableMovement();
+                break;
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        //yield return new WaitForSeconds(time);
 
         EnableMovement();
-        yield return null;
     }
 
     public void TakeDamage(float playerDamage, Vector2 sourcePosition, float knockbackForce)

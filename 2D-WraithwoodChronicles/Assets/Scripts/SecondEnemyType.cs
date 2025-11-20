@@ -9,11 +9,14 @@ public class SecondEnemyType : Enemy
     public float retreatRange;
     public float retreatSpeed;
     private bool isRetreating;
+    private float lastAttackTime = -9999f;
+    private float shootCooldown = 2f;
     public GameObject sludgeBallPrefab;
     public Transform sludgeBallSpawnPoint;
 
     void Update()
     {
+        cancelAttackCooldown = false;
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
         if (canMove && !isKnockedBack)
@@ -30,7 +33,7 @@ public class SecondEnemyType : Enemy
             if (distanceToPlayer < retreatRange)
             {
                 isRetreating = true;
-                StopCoroutine(AttackCooldown(0));
+                cancelAttackCooldown = true;
             }
             else
             {
@@ -39,8 +42,11 @@ public class SecondEnemyType : Enemy
 
             if (distanceToPlayer < attackRange && distanceToPlayer > retreatRange) //Shooting sludge state
             {
-                ShootSludgeBall();
-                return;
+                //if(Time.deltaTime > lastAttackTime + shootCooldown)
+                {
+                    ShootSludgeBall();
+                    return;
+                }
             }
 
 
@@ -127,6 +133,8 @@ public class SecondEnemyType : Enemy
 
     public void ShootSludgeBall()
     {
+        lastAttackTime = Time.deltaTime;
+
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
         Instantiate(sludgeBallPrefab, sludgeBallSpawnPoint.position, Quaternion.identity);

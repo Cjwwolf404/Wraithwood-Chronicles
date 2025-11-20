@@ -12,6 +12,13 @@ public class Scylus : MonoBehaviour
     public bool isInfected = true;
     public Transform scylusSpawnPoint;
 
+    [Header("Audio Clips")]
+    public List<AudioClip> idleSounds;
+    private float minTimeBetweenSounds = 5f;
+    private float maxTimeBetweenSounds = 15f;
+    public List<AudioClip> talkSounds;
+    private AudioSource audioSource;
+
     [Header("Dialogue Lines")]
     [TextArea(3, 10)]
     public List<string> dialogueLines1;
@@ -36,6 +43,7 @@ public class Scylus : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         instantiatedInfectionGlowPrefab = Instantiate(infectionGlowPrefab, new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.identity);
     }
 
@@ -56,27 +64,40 @@ public class Scylus : MonoBehaviour
                 if (firstInteraction)
                 {
                     GetComponent<NPCDialogue>().StartDialogue(dialogueLines1);
+                    PlaySound("ScylusGreeting");
                 }
                 else
                 {
                     GetComponent<NPCDialogue>().StartDialogue(dialogueLines2);
+                    PlaySound("ScylusGreeting");
                 }
             }
             else
             {
+                double random = Random.Range(0f, 1f);
                 if (firstInteraction)
                 {
                     GetComponent<NPCDialogue>().ContinueDialogue(dialogueLines1, true);
+                    if(random < 0.5f && GetComponent<NPCDialogue>().currentLine != dialogueLines1.Count)
+                    {
+                        AudioClip clip = talkSounds[Random.Range(1, talkSounds.Count)];
+                        audioSource.PlayOneShot(clip);
+                    }
                 }
                 else
                 {
                     GetComponent<NPCDialogue>().ContinueDialogue(dialogueLines2, false);
+                    if(random < 0.5f && GetComponent<NPCDialogue>().currentLine != dialogueLines2.Count)
+                    {
+                        AudioClip clip = talkSounds[Random.Range(1, talkSounds.Count)];
+                        audioSource.PlayOneShot(clip);
+                    }
                 }
             }
         }
     }
 
-    IEnumerator FirstScylusInteraction()
+    public IEnumerator FirstScylusInteraction()
     {
         while (Vector3.Distance(instantiatedInfectionGlowPrefab.transform.position, player.transform.position) > 0.1f)
         {
@@ -144,6 +165,8 @@ public class Scylus : MonoBehaviour
         playerBoundaryMV.SetActive(false);
 
         playerController.EnableMovement();
+
+        StartCoroutine(PlayIdleSounds());
     }
     
     void OnTriggerEnter2D(Collider2D collision)
@@ -176,5 +199,34 @@ public class Scylus : MonoBehaviour
             GetComponent<NPCDialogue>().isTalking = false;
             GetComponent<NPCDialogue>().dialoguePromptUI.SetActive(false);
         }
+    }
+
+    public IEnumerator PlayIdleSounds()
+    {
+        while(true)
+        {
+            if(!GetComponent<NPCDialogue>().isTalking)
+            {
+                float waitTime = Random.Range(minTimeBetweenSounds,maxTimeBetweenSounds);
+                yield return new WaitForSeconds(waitTime);
+
+                if(GetComponent<NPCDialogue>().isTalking)
+                {
+                    yield return new WaitUntil(() => !GetComponent<NPCDialogue>().isTalking);
+                    continue;
+                }
+
+                AudioClip randomSound = idleSounds[Random.Range(0, idleSounds.Count)];
+
+                audioSource.PlayOneShot(randomSound);
+            }
+        }
+    }
+
+    public void PlaySound(string clipName)
+    {
+        AudioClip clip = talkSounds.Find(c => c.name == clipName);
+
+        audioSource.PlayOneShot(clip);
     }
 }

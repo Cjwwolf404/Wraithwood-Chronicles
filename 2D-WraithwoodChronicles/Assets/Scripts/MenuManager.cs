@@ -34,6 +34,11 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void PlayButtonClickSound()
+    {
+        AudioManager.Instance.PlaySound("ButtonClick");
+    }
+
     public void PlayGame()
     {
         SceneManager.LoadScene("MainLevel");
