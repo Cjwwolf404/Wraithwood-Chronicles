@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     private float attackWait = 0.6f;
     private float lastAttackTime;
     private bool isAttacking = false;
+    private bool gracePeriod = false; //For letting the attack animation play out before breaking out of attack to move
 
     [Header("GroundCheck")]
     public Transform groundCheckPos;
@@ -75,8 +76,10 @@ public class PlayerController : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && canMove && !isAttacking)
             {
                 isAttacking = true;
+                StartCoroutine(StopMovingToAttack());
                 lastAttackTime = Time.time;
                 animator.SetTrigger("startAttack");
+                AudioManager.Instance.PlaySound("Swing1");
                 StartCoroutine(AttackCombo());
             }
         }
@@ -160,6 +163,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public IEnumerator StopMovingToAttack()
+    {
+        gracePeriod = true;
+        DisableMovement();
+
+        yield return new WaitForSeconds(0.2f);
+
+        EnableMovement();
+        gracePeriod = false;
+    }
+
     public void Attack()
     {
         Collider2D[] enemy = Physics2D.OverlapCircleAll(attackPoint.transform.position, attackRadius, enemies);
@@ -184,19 +198,24 @@ public class PlayerController : MonoBehaviour
                 {
                     lastAttackTime = Time.time;
                     animator.SetBool("secondSwing", true);
+                    AudioManager.Instance.PlaySound("Swing2");
                     secondSwing = true;
                 }
                 else
                 {
                     lastAttackTime = Time.time;
                     animator.SetBool("secondSwing", false);
+                    AudioManager.Instance.PlaySound("Swing1");
                     secondSwing = false;
                 }
             }
 
-            if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetButtonDown("Jump"))
+            if(!gracePeriod)
             {
-                break;
+                if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetButtonDown("Jump"))
+                {
+                    break;
+                }
             }
 
             yield return null;
@@ -244,7 +263,10 @@ public class PlayerController : MonoBehaviour
     {
         canMove = false;
         rb.velocity = new Vector2(0f, rb.velocity.y);
-        animator.SetBool("canMove", false);
+        if(!isAttacking)
+        {
+            animator.SetBool("canMove", false);
+        }
     }
 
     public void EnableMovement()

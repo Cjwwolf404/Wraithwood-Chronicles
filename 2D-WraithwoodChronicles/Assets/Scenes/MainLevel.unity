@@ -2497,7 +2497,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -6067,7 +6067,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 354.22, y: -149.29, z: -10}
+  m_LocalPosition: {x: 276.3, y: -29.6, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6348,7 +6348,7 @@ MonoBehaviour:
   beginningSpawn: {fileID: 1153367236}
   currentSpawnPoint: {fileID: 0}
   currentCurseEnergyAmount: 0
-  hasClawAbility: 0
+  hasClawAbility: 1
   hasClingAbility: 0
 --- !u!4 &560578189
 Transform:
@@ -7244,7 +7244,7 @@ Transform:
   m_GameObject: {fileID: 685983368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 354.22, y: -149.29, z: -10}
+  m_LocalPosition: {x: 276.3, y: -29.6, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9471,7 +9471,7 @@ Transform:
   m_GameObject: {fileID: 824704030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 354.22, y: -149.29, z: 0}
+  m_LocalPosition: {x: 276.3, y: -29.6, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12590,7 +12590,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -15798,7 +15798,10 @@ MonoBehaviour:
   musicSource: {fileID: 1130249621}
   soundEffectsSource: {fileID: 161838626}
   musicTrackClips: []
-  soundEffectClips: []
+  soundEffectClips:
+  - {fileID: 8300000, guid: e7c76bf5217facc478ba49502728e559, type: 3}
+  - {fileID: 8300000, guid: cde27f607fe9c6a49b52bf175d65e94e, type: 3}
+  - {fileID: 8300000, guid: 8fa99f7016d720e4fa7ac1fbb3020832, type: 3}
   musicFadeDuration: 1.5
 --- !u!1 &1368889852
 GameObject:

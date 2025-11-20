@@ -110,6 +110,8 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float playerDamage, Vector2 sourcePosition, float knockbackForce)
     {
+        AudioManager.Instance.PlaySound("EnemyDamage", gameObject);
+
         currentHealth -= playerDamage;
 
         if (isKnockedBack) return;
