@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Player UI")]
     public Slider healthBar;
+    public GameObject curseEnergySymbol;
     public TMP_Text curseEnergyAmount;
 
     [Header("Black Screen")]
@@ -112,6 +113,22 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         continueText.gameObject.SetActive(true);
+    }
+
+    public void ChangePlayerUIActive(bool isActive)
+    {
+        if (isActive)
+        {
+            healthBar.gameObject.SetActive(false);
+            curseEnergySymbol.SetActive(false);
+            curseEnergyAmount.gameObject.SetActive(false);
+        }
+        else
+        {
+            healthBar.gameObject.SetActive(true);
+            curseEnergySymbol.SetActive(true);
+            curseEnergyAmount.gameObject.SetActive(true);
+        }
     }
 
     public void ChangeAbilityScreenActive(bool isActive)

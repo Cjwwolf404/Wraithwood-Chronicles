@@ -18,6 +18,7 @@ public class NPCDialogue : MonoBehaviour
     {
         isTalking = true;
         currentLine = 0;
+        UIManager.Instance.ChangePlayerUIActive(true);
         dialoguePromptUI.SetActive(false);
         dialogueUI.ShowDialogue(npcName, dialogueLines[currentLine]);
     }
@@ -46,6 +47,7 @@ public class NPCDialogue : MonoBehaviour
     {
         isTalking = false;
         dialoguePromptUI.SetActive(true);
+        UIManager.Instance.ChangePlayerUIActive(false);
         dialogueUI.HideDialogue();
     }
 }
