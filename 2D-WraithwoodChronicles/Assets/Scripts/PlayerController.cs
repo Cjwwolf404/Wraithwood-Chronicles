@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public float jumpTakeOffSpeed;
     public int maxJumps;
     private int jumpsRemaining;
+    public ParticleSystem dustTrail;
 
     [Header("Health, Damage, and Curse Energy")]
     public float maxPlayerHealth;
@@ -70,6 +71,8 @@ public class PlayerController : MonoBehaviour
         GroundCheck();
         
         FlipSprite();
+
+        StartStopDustTrail();
 
         if(GameManager.Instance.hasClawAbility)
         {
@@ -275,6 +278,22 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("canMove", true);
     }
 
+    public void StartStopDustTrail()
+    {
+        if (rb.velocity.y != 0 || rb.velocity.x == 0)
+        {
+            dustTrail.Stop();
+        }
+        else
+        {
+            if(!dustTrail.isPlaying)
+            {
+                
+                dustTrail.Play();
+            }
+        }
+    }
+
     void FlipSprite()
     {
         if (canMove)
@@ -285,6 +304,8 @@ public class PlayerController : MonoBehaviour
                 Vector3 ls = transform.localScale;
                 ls.x *= -1f;
                 transform.localScale = ls;
+                dustTrail.transform.localScale = ls;
+                dustTrail.Clear();
             }
         }
     }
