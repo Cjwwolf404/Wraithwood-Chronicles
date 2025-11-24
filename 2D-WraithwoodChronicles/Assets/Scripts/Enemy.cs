@@ -112,7 +112,7 @@ public class Enemy : MonoBehaviour
                 Debug.Log("cancelling attack cooldown");
                 cancelAttackCooldown = false;
                 EnableMovement();
-                break;
+                StopCoroutine(AttackCooldown(0));
             }
 
             timer += Time.deltaTime;

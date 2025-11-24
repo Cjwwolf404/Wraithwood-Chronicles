@@ -134,11 +134,16 @@ public class SecondEnemyType : Enemy
     public void ShootSludgeBall()
     {
         lastAttackTime = Time.deltaTime;
+        
+        animator.SetTrigger("shoot");
 
         rb.velocity = new Vector2(0f, rb.velocity.y);
 
-        Instantiate(sludgeBallPrefab, sludgeBallSpawnPoint.position, Quaternion.identity);
-
         StartCoroutine(AttackCooldown(2));
+    }
+
+    public void InstantiateSludgeBall()
+    {
+        Instantiate(sludgeBallPrefab, sludgeBallSpawnPoint.position, Quaternion.identity);
     }
 }
