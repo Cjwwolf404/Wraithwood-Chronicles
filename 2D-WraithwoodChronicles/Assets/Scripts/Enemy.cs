@@ -42,8 +42,10 @@ public class Enemy : MonoBehaviour
     private protected bool isKnockedBack = false;
     private protected bool isFacingRight = false;
 
-    [Header("Particle System Prefab")]
+    [Header("Particle Prefabs")]
     public GameObject curseEnergyPrefab;
+    public GameObject hitBloodSplat;
+    public GameObject deathBloodSplat;
 
     private protected Animator animator;
 
@@ -103,23 +105,7 @@ public class Enemy : MonoBehaviour
     {
         DisableMovement();
 
-        float timer = 0f;
-
-        while(timer < time)
-        {
-            if(cancelAttackCooldown)
-            {
-                Debug.Log("cancelling attack cooldown");
-                cancelAttackCooldown = false;
-                EnableMovement();
-                StopCoroutine(AttackCooldown(0));
-            }
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        //yield return new WaitForSeconds(time);
+        yield return new WaitForSeconds(time);
 
         EnableMovement();
     }
@@ -127,6 +113,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float playerDamage, Vector2 sourcePosition, float knockbackForce)
     {
         AudioManager.Instance.PlaySound("EnemyDamage", gameObject);
+        Instantiate(hitBloodSplat, transform.position, Quaternion.identity);
 
         currentHealth -= playerDamage;
 

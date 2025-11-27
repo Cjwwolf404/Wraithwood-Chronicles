@@ -10,7 +10,6 @@ public class SecondEnemyType : Enemy
     public float retreatSpeed;
     private bool isRetreating;
     private float lastAttackTime = -9999f;
-    private float shootCooldown = 2f;
     public GameObject sludgeBallPrefab;
     public Transform sludgeBallSpawnPoint;
 
@@ -67,18 +66,13 @@ public class SecondEnemyType : Enemy
             MoveEnemy();
         }
 
-        // if (currentHealth < enemyHealth)
-        // {
-        //     currentHealth = enemyHealth;
-        //     animator.SetTrigger("Attacked");
-        // }
-
         if (currentHealth <= 0)
         {
             for(int i = 0; i < dropAmount; i++)
             {
                 Instantiate(curseEnergyPrefab, transform.position, Quaternion.identity);
             }
+            Instantiate(deathBloodSplat, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

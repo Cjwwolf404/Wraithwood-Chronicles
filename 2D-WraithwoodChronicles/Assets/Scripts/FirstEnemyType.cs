@@ -37,18 +37,13 @@ public class FirstEnemyType : Enemy
             MoveEnemy();
         }
 
-        // if (currentHealth < enemyHealth)
-        // {
-        //     currentHealth = enemyHealth;
-        //     animator.SetTrigger("Attacked");
-        // }
-
         if (currentHealth <= 0)
         {
             for(int i = 0; i < dropAmount; i++)
             {
                 Instantiate(curseEnergyPrefab, transform.position, Quaternion.identity);
             }
+            Instantiate(deathBloodSplat, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

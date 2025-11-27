@@ -4791,7 +4791,7 @@ GameObject:
   - component: {fileID: 394651312}
   m_Layer: 7
   m_Name: Grounds
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6245,7 +6245,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 250.1, y: -28.6, z: -10}
+  m_LocalPosition: {x: 356.81, y: -149.61, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7630,7 +7630,7 @@ Transform:
   m_GameObject: {fileID: 685983368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 250.1, y: -28.6, z: -10}
+  m_LocalPosition: {x: 356.81, y: -149.61, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7859,7 +7859,7 @@ Transform:
   m_GameObject: {fileID: 710888482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.03, y: -2.02, z: 0}
+  m_LocalPosition: {x: -0.065, y: -1.985, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7894,8 +7894,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1342849711}
-  - {fileID: 1853420313}
   - {fileID: 1697867308}
+  - {fileID: 1853420313}
   m_Father: {fileID: 1291067504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9910,7 +9910,7 @@ Transform:
   m_GameObject: {fileID: 824704030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 250.1, y: -28.6, z: 0}
+  m_LocalPosition: {x: 356.81, y: -149.61, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9935,6 +9935,7 @@ MonoBehaviour:
   jumpTakeOffSpeed: 20
   maxJumps: 1
   dustTrail: {fileID: 2110017403}
+  dustBurst: {fileID: 6083448876711457567, guid: 8f0b698ee2f08f846975a189466b3c55, type: 3}
   maxPlayerHealth: 10
   currentHealth: 0
   playerDamage: 1
@@ -9946,7 +9947,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   groundCheckPos: {fileID: 710888483}
-  groundCheckSize: {x: 0.98, y: 0.23}
+  groundCheckSize: {x: 0.6, y: 0.23}
   groundLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -10803,6 +10804,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 1900593822}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
   attackRange: 8
   retreatRange: 6
   retreatSpeed: 7
@@ -11166,6 +11169,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 545868184}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
   attackRange: 8
   retreatRange: 6
   retreatSpeed: 7
@@ -11906,6 +11911,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 551738027}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
 --- !u!1 &999675136
 GameObject:
   m_ObjectHideFlags: 0
@@ -14873,6 +14880,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 783405729}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
 --- !u!1 &1211611774
 GameObject:
   m_ObjectHideFlags: 0
@@ -15970,6 +15979,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 592506179}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
 --- !u!1 &1287211303
 GameObject:
   m_ObjectHideFlags: 0
@@ -17347,6 +17358,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 294906312}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
 --- !u!1 &1418448465
 GameObject:
   m_ObjectHideFlags: 0
@@ -17836,6 +17849,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 947010898}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
 --- !u!1 &1451982427
 GameObject:
   m_ObjectHideFlags: 0
@@ -19341,6 +19356,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 1246178386}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
   attackRange: 8
   retreatRange: 6
   retreatSpeed: 7
@@ -21287,6 +21304,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 812394304}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
   attackRange: 8
   retreatRange: 6
   retreatSpeed: 7
@@ -24403,7 +24422,7 @@ GameObject:
   - component: {fileID: 2057232570}
   m_Layer: 7
   m_Name: Platforms
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24515,6 +24534,8 @@ MonoBehaviour:
   playerController: {fileID: 824704035}
   groundCheck: {fileID: 403637935}
   curseEnergyPrefab: {fileID: 6544502245458325036, guid: 99e51d3b7dc1fe34b8fbe34ec45a1a03, type: 3}
+  hitBloodSplat: {fileID: 178001323315832386, guid: 9e06c9e80246e2b4e9f41a7b868f003c, type: 3}
+  deathBloodSplat: {fileID: 3395337319405187108, guid: b59ba79a52f31e24aa27b05bfad9f9de, type: 3}
   attackRange: 8
   retreatRange: 6
   retreatSpeed: 7
@@ -25098,8 +25119,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 1.5
+      scalar: 2.2
+      minScalar: 1.7
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -25151,7 +25172,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 1.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -25208,7 +25229,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0.7921569}
+        key0: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0.39215687}
         key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
@@ -25269,8 +25290,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.3
-      minScalar: 1
+      scalar: 1.7
+      minScalar: 1.3
       maxCurve:
         serializedVersion: 2
         m_Curve:

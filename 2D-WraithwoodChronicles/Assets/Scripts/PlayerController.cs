@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public int maxJumps;
     private int jumpsRemaining;
     public ParticleSystem dustTrail;
+    public ParticleSystem dustBurst;
 
     [Header("Health, Damage, and Curse Energy")]
     public float maxPlayerHealth;
@@ -88,40 +89,19 @@ public class PlayerController : MonoBehaviour
         }
 
         if (jumpsRemaining > 0 && canMove)
+        {
+            if (Input.GetButtonDown("Jump"))
             {
-                if (Input.GetButtonDown("Jump"))
+                rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
+                jumpsRemaining--;
+            }
+            else if (Input.GetButtonUp("Jump"))
+            {
+                if (rb.velocity.y > 0)
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, jumpTakeOffSpeed);
+                    rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
                     jumpsRemaining--;
                 }
-                else if (Input.GetButtonUp("Jump"))
-                {
-                    if (rb.velocity.y > 0)
-                    {
-                        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-                        jumpsRemaining--;
-                    }
-                }
-            }
-
-        if (rb.velocity.y > 0)
-        {
-            animator.SetBool("isJumping", true);
-
-            if(isAttacking)
-            {
-                animator.SetBool("isJumping", false);
-            }
-        }
-
-        if (rb.velocity.y < 0)
-        {
-            animator.SetBool("isFalling", true);
-
-            if(isAttacking)
-            {
-                animator.SetBool("isJumping", false);
-                animator.SetBool("isFalling", false);
             }
         }
 
@@ -140,6 +120,34 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(horizontalInput * maxSpeed, rb.velocity.y);
             animator.SetFloat("xVelocity", Math.Abs(rb.velocity.x));
             animator.SetFloat("yVelocity", rb.velocity.y);
+        }
+
+        if (rb.velocity.y > 0)
+        {
+            animator.SetBool("isJumping", true);
+            dustTrail.Clear();
+
+            if(isAttacking)
+            {
+                animator.SetBool("isJumping", false);
+            }
+        }
+
+        if (rb.velocity.y < 0)
+        {
+            animator.SetBool("isFalling", true);
+            dustTrail.Clear();
+
+            if(isAttacking)
+            {
+                animator.SetBool("isJumping", false);
+                animator.SetBool("isFalling", false);
+            }
+
+            if (Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+            {
+                DustBurst();
+            }
         }
     }
 
@@ -288,10 +296,14 @@ public class PlayerController : MonoBehaviour
         {
             if(!dustTrail.isPlaying)
             {
-                
                 dustTrail.Play();
             }
         }
+    }
+
+    public void DustBurst()
+    {
+        Instantiate(dustBurst, groundCheckPos.position, Quaternion.identity);
     }
 
     void FlipSprite()
