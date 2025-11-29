@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        //player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player");
 
         SpawnPoint[] foundSpawnPoints = FindObjectsOfType<SpawnPoint>();
         foreach(var sp in foundSpawnPoints)
@@ -67,12 +67,29 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
+        UIManager.Instance.blackScreenCanvasGroup.alpha = 1f;
+
         player = GameObject.FindGameObjectWithTag("Player");
+
+        player.GetComponent<PlayerController>().DisableMovement();
 
         if (currentSpawnPoint != null)
         {
-            player.transform.position = currentSpawnPoint.transform.position;
+            player.transform.position = new Vector3(currentSpawnPoint.transform.position.x - 10, 
+                                                    currentSpawnPoint.transform.position.y,
+                                                    currentSpawnPoint.transform.position.z);
         }
+
+        StartCoroutine(WaitForFade());
+    }
+
+    public IEnumerator WaitForFade()
+    {
+        yield return new WaitForSeconds(1);
+
+        player.GetComponent<PlayerController>().EnableMovement();
+
+        StartCoroutine(UIManager.Instance.FadeOutBlackScreen(3));
     }
 
     public void ChangeSpawnPoint(SpawnPoint spawnPoint)
@@ -113,6 +130,14 @@ public class GameManager : MonoBehaviour
     {
         //Wait for scene to load
         yield return null;
+
+        playerSpawnPoints.Clear();
+
+        SpawnPoint[] foundSpawnPoints = FindObjectsOfType<SpawnPoint>();
+        foreach(var sp in foundSpawnPoints)
+        {
+            playerSpawnPoints.Add(sp);
+        }
 
         foreach(var sp in playerSpawnPoints)
         {

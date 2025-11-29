@@ -112,13 +112,13 @@ public class Scylus : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        StartCoroutine(UIManager.Instance.FadeInBlackScreen());
+        StartCoroutine(UIManager.Instance.FadeInBlackScreen(1));
 
         yield return new WaitForSeconds(2f);
 
         UIManager.Instance.SetupAbilityScreen("Claw Ability Obtained", "Left-click to slash enemies");
         UIManager.Instance.ChangeAbilityScreenActive(false);
-        StartCoroutine(UIManager.Instance.AbilityGainedScreen());
+        StartCoroutine(UIManager.Instance.AbilityGainedScreen(1));
 
         yield return new WaitForSeconds(4.5f);
 
@@ -128,7 +128,7 @@ public class Scylus : MonoBehaviour
         }
 
         UIManager.Instance.ChangeAbilityScreenActive(true);
-        StartCoroutine(UIManager.Instance.FadeOutBlackScreen());
+        StartCoroutine(UIManager.Instance.FadeOutBlackScreen(1));
 
         animator.SetBool("isInfected", false);
         isInfected = false;
@@ -147,7 +147,7 @@ public class Scylus : MonoBehaviour
     {
         playerController.DisableMovement();
 
-        StartCoroutine(UIManager.Instance.FadeInBlackScreen());
+        StartCoroutine(UIManager.Instance.FadeInBlackScreen(1));
 
         yield return new WaitForSeconds(2f);
 
@@ -156,7 +156,7 @@ public class Scylus : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        StartCoroutine(UIManager.Instance.FadeOutBlackScreen());
+        StartCoroutine(UIManager.Instance.FadeOutBlackScreen(1));
 
         yield return new WaitForSeconds(1f);
 

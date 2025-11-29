@@ -16,7 +16,6 @@ public class UIManager : MonoBehaviour
     [Header("Black Screen")]
     public GameObject blackScreenPanel;
     public CanvasGroup blackScreenCanvasGroup;
-    public float fadeDuration;
 
     [Header("New Ability Screen")]
     public GameObject newAbilityPanel;
@@ -48,7 +47,7 @@ public class UIManager : MonoBehaviour
         curseEnergyAmount.text = GameManager.Instance.currentCurseEnergyAmount.ToString();
     }
 
-    public IEnumerator FadeInBlackScreen()
+    public IEnumerator FadeInBlackScreen(float fadeDuration)
     {
         float timer = 0f;
         while (timer < fadeDuration)
@@ -60,7 +59,7 @@ public class UIManager : MonoBehaviour
         blackScreenCanvasGroup.alpha = 1f;
     }
 
-    public IEnumerator FadeOutBlackScreen()
+    public IEnumerator FadeOutBlackScreen(float fadeDuration)
     {
         float timer = 0f;
         while (timer < fadeDuration)
@@ -78,7 +77,7 @@ public class UIManager : MonoBehaviour
         abilityDescriptionText.text = abilityDescription;
     }
 
-    public IEnumerator AbilityGainedScreen()
+    public IEnumerator AbilityGainedScreen(float fadeDuration)
     {
         float timer = 0f;
         Color currentColor = abilityGainedText.color;
