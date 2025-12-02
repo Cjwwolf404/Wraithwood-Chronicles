@@ -99,7 +99,7 @@ public class Scylus : MonoBehaviour
 
     public IEnumerator FirstScylusInteraction()
     {
-        while (Vector3.Distance(instantiatedInfectionGlowPrefab.transform.position, player.transform.position) > 0.1f)
+        while (Vector3.Distance(instantiatedInfectionGlowPrefab.transform.position, player.transform.position) > 0.5f)
         {
             instantiatedInfectionGlowPrefab.transform.position = Vector3.MoveTowards(instantiatedInfectionGlowPrefab.transform.position, player.transform.position, 3f * Time.deltaTime);
             yield return null;

@@ -57,6 +57,7 @@ public class MenuManager : MonoBehaviour
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
         gameIsPaused = true;
+        PlayerController.Instance.enabled = false;
     }
 
     public void ResumeGame()
@@ -65,6 +66,7 @@ public class MenuManager : MonoBehaviour
         mainCanvas.SetActive(true);
         Time.timeScale = 1f;
         gameIsPaused = false;
+        PlayerController.Instance.enabled = true;
     }
 
     public void FadeInDeathScreen()
