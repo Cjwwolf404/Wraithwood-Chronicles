@@ -44,13 +44,31 @@ public class Scylus : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-        instantiatedInfectionGlowPrefab = Instantiate(infectionGlowPrefab, new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.identity);
+
+        StartCoroutine(SetupScylus());
+    }
+
+    public IEnumerator SetupScylus()
+    {
+        yield return null;
+
+        if(GameManager.Instance.scylusTeleported == true)
+        {
+            transform.position = scylusSpawnPoint.position;
+            isInfected = false;
+            firstInteraction = false;
+            animator.SetTrigger("hasTeleported");
+        }
+        else
+        {
+            instantiatedInfectionGlowPrefab = Instantiate(infectionGlowPrefab, new Vector3(transform.position.x, transform.position.y + 0.6f, transform.position.z), Quaternion.identity);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && Input.GetMouseButtonDown(1))
+        if (isInfected && playerInRange && Input.GetMouseButtonDown(1))
         {
             playerController.DisableMovement();
             UIManager.Instance.ChangeGamePromptPanelActive(true);
@@ -160,6 +178,7 @@ public class Scylus : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
+        GameManager.Instance.scylusTeleported = true;
         GameManager.Instance.hasClawAbility = true;
 
         playerBoundaryMV.SetActive(false);

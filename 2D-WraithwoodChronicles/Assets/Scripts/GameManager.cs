@@ -18,9 +18,10 @@ public class GameManager : MonoBehaviour
     public List<SpawnPoint> playerSpawnPoints;
     public SpawnPoint beginningSpawn;
 
-    [Header("Player Status")]
+    [Header("Game Status")]
     public SpawnPoint currentSpawnPoint;
     public int currentCurseEnergyAmount;
+    public bool scylusTeleported;
     public bool hasClawAbility;
     public bool hasClingAbility;
 
@@ -35,20 +36,23 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
 
-        player = GameObject.FindGameObjectWithTag("Player");
+    public void StartSetupNewGameCoroutine()
+    {
+        StartCoroutine(SetupNewGame());
+    }
+
+    public IEnumerator SetupNewGame()
+    {
+        yield return null;
 
         SpawnPoint[] foundSpawnPoints = FindObjectsOfType<SpawnPoint>();
         foreach(var sp in foundSpawnPoints)
         {
             playerSpawnPoints.Add(sp);
         }
-    }
 
-    public IEnumerator SetupNewGame()
-    {
-        yield return new WaitUntil (() => Instance != null);
-        Debug.Log("Setting up new game");
         foreach (var sp in playerSpawnPoints)
         {
             if (sp.spawnID == "BeginningSpawn")
@@ -57,10 +61,11 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
-
         currentCurseEnergyAmount = 0;
         hasClawAbility = false;
         hasClingAbility = false;
+
+        SerializeJson();
 
         SpawnPlayer();
     }
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
         {
             CurrentSpawnPointID = currentSpawnPoint.spawnID,
             CurrentCurseEnergyAmount = currentCurseEnergyAmount,
+            ScylusTeleported = scylusTeleported,
             HasClawAbility = hasClawAbility,
             HasClingAbility = hasClingAbility,
         };
@@ -111,6 +117,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Could not save file.");
         }
+
+        Debug.Log(saveState);
     }
 
     public void DeserializeJson()
@@ -151,6 +159,7 @@ public class GameManager : MonoBehaviour
         currentCurseEnergyAmount = data.CurrentCurseEnergyAmount;
         UIManager.Instance.UpdateCurseEnergyAmount();
 
+        scylusTeleported = data.ScylusTeleported;
         hasClawAbility = data.HasClawAbility;
         hasClingAbility = data.HasClingAbility;
 
@@ -160,6 +169,7 @@ public class GameManager : MonoBehaviour
     {
         public string CurrentSpawnPointID;
         public int CurrentCurseEnergyAmount;
+        public bool ScylusTeleported;
         public bool HasClawAbility;
         public bool HasClingAbility;
     }

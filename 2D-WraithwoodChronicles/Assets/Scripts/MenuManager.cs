@@ -42,7 +42,7 @@ public class MenuManager : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene("MainLevel");
-        GameManager.Instance.SetupNewGame();
+        GameManager.Instance.StartSetupNewGameCoroutine();
     }
 
     public void LoadGame()

@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(new Vector2(knockbackDirection * knockbackForce, 3f), ForceMode2D.Impulse);
 
-        Invoke(nameof(ResetInvincibilityFrames), 1f);
+        Invoke(nameof(ResetInvincibilityFrames), 0.7f);
         Invoke(nameof(EndKnockback), 0.2f);
     }
 
