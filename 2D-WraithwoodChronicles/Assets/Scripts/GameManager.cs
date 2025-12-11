@@ -95,6 +95,8 @@ public class GameManager : MonoBehaviour
         player.GetComponent<PlayerController>().EnableMovement();
 
         StartCoroutine(UIManager.Instance.FadeOutBlackScreen(3));
+
+        StartCoroutine(UIManager.Instance.FadeInPlayerUI(1f));
     }
 
     public void ChangeSpawnPoint(SpawnPoint spawnPoint)
@@ -117,8 +119,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("Could not save file.");
         }
-
-        Debug.Log(saveState);
     }
 
     public void DeserializeJson()

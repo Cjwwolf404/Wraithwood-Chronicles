@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
     public Slider healthBar;
     public GameObject curseEnergySymbol;
     public TMP_Text curseEnergyAmount;
+    public CanvasGroup playerUICanvasGroup;
 
     [Header("Black Screen")]
     public GameObject blackScreenPanel;
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         blackScreenCanvasGroup.alpha = 0f;
+        playerUICanvasGroup.alpha = 0f;
     }
 
     public void UpdateHealthBar(float currentPlayerHealth)
@@ -61,6 +63,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator FadeOutBlackScreen(float fadeDuration)
     {
+        blackScreenCanvasGroup.alpha = 1f;
+
         float timer = 0f;
         while (timer < fadeDuration)
         {
@@ -112,6 +116,20 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         continueText.gameObject.SetActive(true);
+    }
+
+    public IEnumerator FadeInPlayerUI(float fadeDuration)
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            playerUICanvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        playerUICanvasGroup.alpha = 1f;
     }
 
     public void ChangePlayerUIActive(bool isActive)

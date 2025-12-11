@@ -7,16 +7,25 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance;
     public GameObject mainCanvas;
+    public CanvasGroup canvasGroup;
     public GameObject pauseMenu;
     public GameObject deathMenu;
     public CanvasGroup deathScreenCanvasGroup;
-    public float fadeDuration;
 
     public static bool gameIsPaused;
 
     void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        if(SceneManager.GetActiveScene().name != "MainLevel")
+        {
+            canvasGroup.alpha = 0f;
+            StartCoroutine (FadeIn(.5f));
+        }
     }
 
     void Update()
@@ -34,21 +43,19 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void PlayButtonClickSound()
+    public void NewGame()
     {
-        AudioManager.Instance.PlaySound("ButtonClick");
+        StartCoroutine(FadeOut(0.8f, "GameIntroduction", false));
     }
 
-    public void PlayGame()
+    public void BeginNewGame()
     {
-        SceneManager.LoadScene("MainLevel");
-        GameManager.Instance.StartSetupNewGameCoroutine();
+        StartCoroutine(FadeOut(0.8f, "MainLevel", true));
     }
 
     public void LoadGame()
     {
-        SceneManager.LoadScene("MainLevel");
-        GameManager.Instance.DeserializeJson();
+        StartCoroutine (FadeOut(0.8f, "MainLevel", false));
     }
 
     public void PauseGame()
@@ -71,6 +78,7 @@ public class MenuManager : MonoBehaviour
 
     public void FadeInDeathScreen()
     {
+        float fadeDuration = 1f;
         mainCanvas.SetActive(false);
         deathMenu.SetActive(true);
 
@@ -100,5 +108,52 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Quit Game");
         Application.Quit();
+    }
+
+    public void PlayButtonClickSound()
+    {
+        AudioManager.Instance.PlaySound("ButtonClick");
+    }
+
+    public IEnumerator FadeIn(float fadeDuration)
+    {
+        canvasGroup.alpha = 0f;
+
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, timer / fadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        canvasGroup.alpha = 1f;
+    }
+
+    public IEnumerator FadeOut(float fadeDuration, string sceneToLoad, bool isStartingNewGame)
+    {
+        canvasGroup.alpha = 1f;
+
+        float timer = 0f;
+        while (timer < fadeDuration)
+        {
+            canvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        canvasGroup.alpha = 0f;
+
+        SceneManager.LoadScene(sceneToLoad);
+
+        if(sceneToLoad == "MainLevel")
+        {
+            if(isStartingNewGame)
+            {
+                GameManager.Instance.StartSetupNewGameCoroutine();
+            }
+            else
+            {
+                GameManager.Instance.DeserializeJson();
+            }
+        }
     }
 }
