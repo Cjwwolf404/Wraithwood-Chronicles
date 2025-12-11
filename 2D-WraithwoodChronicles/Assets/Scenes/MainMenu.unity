@@ -2217,6 +2217,7 @@ MonoBehaviour:
   beginningSpawn: {fileID: 0}
   currentSpawnPoint: {fileID: 0}
   currentCurseEnergyAmount: 0
+  scylusTeleported: 0
   hasClawAbility: 0
   hasClingAbility: 0
 --- !u!4 &1558356246
