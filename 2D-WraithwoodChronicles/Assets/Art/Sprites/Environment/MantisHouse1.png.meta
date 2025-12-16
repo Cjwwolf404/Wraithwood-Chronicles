@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: d664b4c1442bf2d4ab24ac4ac12fd368
+guid: 850b57c345dfdbc40889643ca2e14c1d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
-    borderMipMap: 0
+    borderMipMap: 1
     mipMapsPreserveCoverage: 0
     alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
@@ -69,8 +69,8 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
+    maxTextureSize: 512
+    resizeAlgorithm: 1
     textureFormat: 4
     textureCompression: 2
     compressionQuality: 50
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PlatformUnderRight_0
+      name: MantisHouse1_0
       rect:
         serializedVersion: 2
-        x: 981
-        y: 473
-        width: 165
-        height: 155
+        x: 132
+        y: 19
+        width: 106
+        height: 207
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,8 +137,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8cf59a8a7934f8545b8420e6743ca68d
-      internalID: 977095305
+      spriteID: 779c6ec3724848546bdc85ebba438d87
+      internalID: -63550167
       vertices: []
       indices: 
       edges: []
@@ -154,7 +154,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PlatformUnderRight_0: 977095305
+      MantisHouse1_0: -63550167
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -36,7 +36,6 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         blackScreenCanvasGroup.alpha = 0f;
-        playerUICanvasGroup.alpha = 0f;
     }
 
     public void UpdateHealthBar(float currentPlayerHealth)
@@ -120,6 +119,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator FadeInPlayerUI(float fadeDuration)
     {
+        playerUICanvasGroup.alpha = 0f;
+        
         yield return new WaitForSeconds(2.5f);
 
         float timer = 0f;

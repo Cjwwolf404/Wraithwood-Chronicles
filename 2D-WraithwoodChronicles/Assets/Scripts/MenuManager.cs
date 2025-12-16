@@ -58,6 +58,12 @@ public class MenuManager : MonoBehaviour
         StartCoroutine (FadeOut(0.8f, "MainLevel", false));
     }
 
+    public void ReloadGame()
+    {
+        SceneManager.LoadScene("MainLevel");
+        GameManager.Instance.DeserializeJson();
+    }
+
     public void PauseGame()
     {
         mainCanvas.SetActive(false);
